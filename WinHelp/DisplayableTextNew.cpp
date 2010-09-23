@@ -2159,6 +2159,16 @@ QString DisplayableTextNew::getHTML(bool &empty) const
             case END_OF_CHARACTER_FORMATTING:
                 break;
 
+            case TAB_COMMAND:
+                if(!isInParagraph)
+                {
+                    result += openingPara;
+                    isInParagraph = true;
+                }
+                result += escapedString;
+                result += "&nbsp;&nbsp;&nbsp;&nbsp;";
+                break;
+
             default:
                 if(!isInParagraph)
                 {
