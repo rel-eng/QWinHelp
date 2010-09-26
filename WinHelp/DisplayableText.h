@@ -30,7 +30,7 @@ private:
     quint8 type;
 protected:
     DisplayableText();
-    DisplayableText(quint8 type);
+    DisplayableText(quint8 type, int topicDescriptorNumber, int topicNumber);
     DisplayableText(const DisplayableText &rhs);
     DisplayableText &operator=(const DisplayableText &rhs);
 public:

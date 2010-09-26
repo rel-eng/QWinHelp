@@ -19,7 +19,8 @@
 
 #include "HelpView.h"
 
-HelpView::HelpView(ThreadedWinHelpFileLoader &winHelpFileLoader)
+HelpView::HelpView(ThreadedWinHelpFileLoader &winHelpFileLoader,
+    QWidget *parent) : QWebView(parent)
 {
     HelpAccessManager *newManager = new HelpAccessManager(winHelpFileLoader,
         this);

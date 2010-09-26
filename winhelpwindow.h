@@ -26,6 +26,7 @@
 #include <QStringList>
 #include <QStringListModel>
 #include <QSortFilterProxyModel>
+#include <QSignalMapper>
 #include "ui_winhelpwindow.h"
 
 #include "WinHelp/WinHelpFile.h"
@@ -54,6 +55,7 @@ private slots:
     void indexSearchLineTextChanged(QString text);
     void indexSearchListDoubleClicked(const QModelIndex & index);
     void pagesTabsTabCloseRequested(int index);
+    void tabURLChanged(QWidget *widget);
 
 private:
     Q_DISABLE_COPY(WinHelpWindow)
@@ -63,6 +65,7 @@ private:
     ThreadedWinHelpFileLoader winHelpFileLoader;
     HelpIndexModel topics;
     QSortFilterProxyModel topicsProxy;
+    QSignalMapper *tabMapper;
 
     void setCurrentFile(const QString &fileName);
     QString strippedName(const QString &fullFileName);

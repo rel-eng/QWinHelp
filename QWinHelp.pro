@@ -88,7 +88,8 @@ HEADERS += HelpReply.h \
     WinHelp/BTreeHeader.h \
     WinHelp/InternalDirectoryFileHeader.h \
     WinHelp/WinHelpFileHeader.h \
-    qwinhelp.h
+    qwinhelp.h \
+    helpbrowsingwidget.h
 SOURCES += HelpReply.cpp \
     HelpAccessManager.cpp \
     HelpView.cpp \
@@ -153,7 +154,8 @@ SOURCES += HelpReply.cpp \
     WinHelp/InternalDirectoryFileHeader.cpp \
     WinHelp/WinHelpFileHeader.cpp \
     main.cpp \
-    qwinhelp.cpp
+    qwinhelp.cpp \
+    helpbrowsingwidget.cpp
 FORMS += winhelpwindow.ui \
     qwinhelp.ui
 RESOURCES +=

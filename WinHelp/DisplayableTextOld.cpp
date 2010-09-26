@@ -24,7 +24,7 @@
 
 #include <stdexcept>
 
-DisplayableTextOld::DisplayableTextOld() : DisplayableText(0x01),
+DisplayableTextOld::DisplayableTextOld() : DisplayableText(0x01, 0, 0),
     topicSize(Q_INT64_C(0)), paragraphs(), texts()
 {
     PRINT_DBG("Displayable text old default constructor");
@@ -34,7 +34,9 @@ DisplayableTextOld::DisplayableTextOld(const void *src,
     size_t srcSize,
     const void *textSrc,
     size_t textSize,
-    QTextCodec *codec) : DisplayableText(0x01), paragraphs(), texts()
+    QTextCodec *codec,
+    int topicDescriptorNumber, int topicNumber) : DisplayableText(0x01,
+    topicDescriptorNumber, topicNumber), paragraphs(), texts()
 {
     if(codec == NULL)
     {
@@ -2053,6 +2055,7 @@ QString DisplayableTextOld::getHTML(bool &empty) const
     QString result;
     int textLength = 0;
     bool isInParagraph = false;
+    bool isInLink = false;
     QString openingPara = "<p style=\"";
     if(this->paragraphs.at(0).isRightAlignedParagraph)
     {
@@ -2163,6 +2166,79 @@ QString DisplayableTextOld::getHTML(bool &empty) const
                 }
                 result += escapedString;
                 result += "&nbsp;&nbsp;&nbsp;&nbsp;";
+                break;
+
+            case TOPIC_JUMP_E1:
+            {
+                if(!isInParagraph)
+                {
+                    result += openingPara;
+                    isInParagraph = true;
+                }
+                result += escapedString;
+                int topicIndex =
+                        this->paragraphs.at(0).commands.at(i).dynamicCast<
+                        TopicJumpE1Command>()->getTopicOffset().getRawValue();
+                if(topicIndex >= 16)
+                {
+                    result += QString(
+                            "<a href=help://help.local/pages?topic=%1>").arg(
+                            topicIndex - 16);
+                    isInLink = true;
+                }
+            }
+            break;
+
+            case TOPIC_JUMP_E3:
+            {
+                if(!isInParagraph)
+                {
+                    result += openingPara;
+                    isInParagraph = true;
+                }
+                int topicIndex =
+                        this->paragraphs.at(0).commands.at(i).dynamicCast<
+                        TopicJumpE3Command>()->getTopicOffset().getRawValue();
+                if(topicIndex >= 16)
+                {
+                    result += QString(
+                            "<a href=help://help.local/pages?topic=%1>").arg(
+                            topicIndex - 16);
+                    isInLink = true;
+                }
+                result += escapedString;
+            }
+            break;
+
+            case TOPIC_JUMP_WITHOUT_FONT_CHANGE:
+            {
+                if(!isInParagraph)
+                {
+                    result += openingPara;
+                    isInParagraph = true;
+                }
+                int topicIndex =
+                        this->paragraphs.at(0).commands.at(i).dynamicCast<
+                        TopicJumpWithoutFontChangeCommand>()->getTopicOffset().
+                        getRawValue();
+                if(topicIndex >= 16)
+                {
+                    result += QString(
+                            "<a href=help://help.local/pages?topic=%1>").arg(
+                            topicIndex - 16);
+                    isInLink = true;
+                }
+                result += escapedString;
+            }
+            break;
+
+            case END_OF_HOTSPOT:
+                result += escapedString;
+                if(isInLink)
+                {
+                    result += "</a>";
+                    isInLink = false;
+                }
                 break;
 
             default:

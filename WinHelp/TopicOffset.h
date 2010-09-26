@@ -32,6 +32,7 @@ private:
     qint64 topicBlockNumber;
     /** 15 младших бит TOPICOFFSET. */
     qint64 characterCount;
+    qint32 rawValue;
 public:
     /** Размер смещения в байтах. */
     static const qint64 size = 4;
@@ -44,6 +45,7 @@ public:
     TopicOffset & operator=(const TopicOffset & rhs);
     qint64 getTopicBlockNumber() const;
     qint64 getCharacterCount() const;
+    qint32 getRawValue() const;
 };
 
 #endif /* TOPICOFFSET_H_ */

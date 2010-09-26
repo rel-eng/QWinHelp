@@ -19,11 +19,20 @@
 
 #include "TopicLink.h"
 
-TopicLink::TopicLink()
+TopicLink::TopicLink() : topicDescriptorNumber(0), topicNumber(0),
+    characterCount(0)
 {
 }
 
-TopicLink::TopicLink(const TopicLink &rhs)
+TopicLink::TopicLink(int topicDescriptorNumber,
+    int topicNumber) : topicDescriptorNumber(topicDescriptorNumber),
+    topicNumber(topicNumber), characterCount(0)
+{
+}
+
+TopicLink::TopicLink(const TopicLink &rhs) : topicDescriptorNumber(rhs.
+    topicDescriptorNumber), topicNumber(rhs.topicNumber),
+    characterCount(rhs.characterCount)
 {
 }
 
@@ -35,6 +44,24 @@ TopicLink & TopicLink::operator=(const TopicLink &rhs)
 {
     if (this != &rhs)
     {
+        this->topicDescriptorNumber = rhs.topicDescriptorNumber;
+        this->topicNumber = rhs.topicNumber;
+        this->characterCount = rhs.characterCount;
     }
     return *this;
+}
+
+int TopicLink::getTopicDescriptorNumber() const
+{
+    return this->topicDescriptorNumber;
+}
+
+int TopicLink::getTopicLinkNumber() const
+{
+    return this->topicNumber;
+}
+
+int TopicLink::getCharacterCount() const
+{
+    return this->characterCount;
 }

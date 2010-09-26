@@ -63,7 +63,48 @@ HelpReply::HelpReply(ThreadedWinHelpFileLoader &winHelpFileLoader,
             }
             else
             {
-                setError(ContentNotFoundError, "Not found");
+                if(url.hasQueryItem(QString("block")) &&
+                    url.hasQueryItem(QString("character")))
+                {
+                    bool topicBlockValid = true;
+                    int block = url.queryItemValue(QString("block")).toInt(
+                        &topicBlockValid,
+                        10);
+                    bool topicCharacterValid = true;
+                    int character =
+                        url.queryItemValue(QString("character")).toInt(
+                        &topicCharacterValid,
+                        10);
+                    if(topicBlockValid && topicCharacterValid)
+                    {
+                        int topicIndex = winHelpFileLoader.getTopicIndex(block,
+                            character);
+                        QString topicContents =
+                            winHelpFileLoader.getHelpFileTopicContents(
+                            topicIndex);
+                        if(!topicContents.isEmpty())
+                        {
+                            this->content = topicContents.toUtf8();
+                            setHeader(QNetworkRequest::ContentTypeHeader,
+                                QVariant("text/html; charset=UTF-8"));
+                            setHeader(QNetworkRequest::ContentLengthHeader,
+                                QVariant(this->content.size()));
+                            setError(QNetworkReply::NoError, "No Error");
+                        }
+                        else
+                        {
+                            setError(ContentNotFoundError, "Not found");
+                        }
+                    }
+                    else
+                    {
+                        setError(ContentNotFoundError, "Not found");
+                    }
+                }
+                else
+                {
+                    setError(ContentNotFoundError, "Not found");
+                }
             }
         }
         else

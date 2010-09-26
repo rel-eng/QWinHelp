@@ -1,4 +1,4 @@
-/* Help view class definition.
+/* Help browsing widget class definition.
 
    Copyright (C) 2010 rel-eng
 
@@ -17,22 +17,40 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-#ifndef HELPVIEW_H_
-#define HELPVIEW_H_
+#ifndef HELPBROWSINGWIDGET_H
+#define HELPBROWSINGWIDGET_H
 
-#include <QObject>
-#include <QWebView>
 #include <QWidget>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QUrl>
 
-#include "HelpAccessManager.h"
+#include "HelpView.h"
 #include "ThreadedWinHelpFileLoader.h"
 
-class HelpView : public QWebView
+class HelpBrowsingWidget : public QWidget
 {
     Q_OBJECT
 public:
-    HelpView(ThreadedWinHelpFileLoader &winHelpFileLoader, QWidget *parent = 0);
-    virtual ~HelpView();
+    explicit HelpBrowsingWidget(ThreadedWinHelpFileLoader &winHelpFileLoader,
+        QWidget *parent = 0);
+    void goToURL(const QUrl &url);
+    QUrl getURL() const;
+
+signals:
+    void urlChanged(const QUrl &url);
+public slots:
+
+private slots:
+    void onURLChanged(const QUrl &url);
+
+private:
+    HelpView *browser;
+    QVBoxLayout *verticalLayout;
+    QHBoxLayout *horizontalLayout;
+    QPushButton *prevButton;
+    QPushButton *nextButton;
 };
 
-#endif /* HELPVIEW_H_ */
+#endif // HELPBROWSINGWIDGET_H

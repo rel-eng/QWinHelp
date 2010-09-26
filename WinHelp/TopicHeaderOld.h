@@ -43,7 +43,8 @@ public:
         size_t srcSize,
         const void *textSrc,
         size_t textSize,
-        QTextCodec *codec);
+        QTextCodec *codec,
+        int topicDescriptorNumber, int topicNumber);
     TopicHeaderOld(const TopicHeaderOld& rhs);
     virtual ~TopicHeaderOld();
     TopicHeaderOld & operator=(const TopicHeaderOld & rhs);

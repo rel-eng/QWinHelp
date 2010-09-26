@@ -38,7 +38,9 @@ TopicHeaderNew::TopicHeaderNew(const void *src,
     qint64 decompressSize,
     const void *textSrc,
     size_t textSize,
-    QTextCodec *codec) : TopicHeader(), texts()
+    QTextCodec *codec,
+    int topicDescriptorNumber,
+    int topicNumber) : TopicHeader(topicDescriptorNumber, topicNumber), texts()
 {
     PRINT_DBG("Loading Topic header new");
     if (codec == NULL)

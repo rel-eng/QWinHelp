@@ -23,6 +23,11 @@ TopicHeader::TopicHeader() : TopicLink()
 {
 }
 
+TopicHeader::TopicHeader(int topicDescriptorNumber,
+    int topicNumber) : TopicLink(topicDescriptorNumber, topicNumber)
+{
+}
+
 TopicHeader::~TopicHeader()
 {
 }

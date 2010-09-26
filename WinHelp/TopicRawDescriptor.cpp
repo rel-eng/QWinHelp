@@ -19,6 +19,10 @@
 
 #include "TopicRawDescriptor.h"
 
+#include "TopicHeaderOld.h"
+
+#include <typeinfo>
+
 TopicRawDescriptor::TopicRawDescriptor() : header(), texts(), topicCaption(),
     topicContents()
 {
@@ -69,7 +73,9 @@ QString TopicRawDescriptor::getContents() const
     return this->topicContents;
 }
 
-void TopicRawDescriptor::transformToHtml(int topicIndex, int topicCount)
+void TopicRawDescriptor::transformToHtml(int topicIndex,
+    int topicCount,
+    QList<QSharedPointer<TopicLink> > linkPointers)
 {
     this->topicCaption = this->header->getTopicName();
     if(this->topicCaption.isEmpty())
@@ -121,6 +127,35 @@ void TopicRawDescriptor::transformToHtml(int topicIndex, int topicCount)
     if(emptyTopic)
     {
         this->topicContents += "Empty topic";
+    }
+    if(typeid(*(this->header.data())) == typeid(TopicHeaderOld))
+    {
+        topicContents +=
+            "<table width=100%><tr><td><p style=\"text-align: left\">";
+        qint32 prev = header.dynamicCast<TopicHeaderOld>()->getPrevTopicNumber();
+        if(prev != -1)
+        {
+            if(prev >= 16)
+            {
+                topicContents += QString(
+                    "<a href=help://help.local/pages?topic=%1>Previous topic</a>")
+                    .
+                    arg(prev - 16);
+            }
+        }
+        topicContents += "</p></td><td><p style=\"text-align: right\">";
+        qint32 next = header.dynamicCast<TopicHeaderOld>()->getNextTopicNumber();
+        if(next != -1)
+        {
+            if(next >= 16)
+            {
+                topicContents += QString(
+                    "<a href=help://help.local/pages?topic=%1>Next topic</a>").
+                    arg(
+                    next - 16);
+            }
+        }
+        topicContents += "</p></td></tr></table>";
     }
     this->topicContents += "</body></html>";
     this->header.clear();

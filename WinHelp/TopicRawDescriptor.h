@@ -26,6 +26,7 @@
 
 #include "TopicHeader.h"
 #include "DisplayableText.h"
+#include "TopicLink.h"
 
 class TopicRawDescriptor
 {
@@ -43,7 +44,9 @@ public:
     void AddDisplayableText(const QSharedPointer<DisplayableText> &text);
     QString getCaption() const;
     QString getContents() const;
-    void transformToHtml(int topicIndex, int topicCount);
+    void transformToHtml(int topicIndex,
+        int topicCount,
+        QList<QSharedPointer<TopicLink> > linkPointers);
 };
 
 #endif /* TOPICRAWDESCRIPTOR_H_ */

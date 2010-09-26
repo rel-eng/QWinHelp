@@ -34,7 +34,9 @@ TopicHeaderOld::TopicHeaderOld(const void *src,
     size_t srcSize,
     const void *textSrc,
     size_t textSize,
-    QTextCodec *codec) : TopicHeader(), texts()
+    QTextCodec *codec,
+    int topicDescriptorNumber,
+    int topicNumber) : TopicHeader(topicDescriptorNumber, topicNumber), texts()
 {
     PRINT_DBG("Loading Topic header old");
     if (codec == NULL)

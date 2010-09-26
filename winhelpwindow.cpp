@@ -26,7 +26,7 @@
 
 #include <stdexcept>
 
-#include "HelpView.h"
+#include "helpbrowsingwidget.h"
 
 WinHelpWindow::WinHelpWindow(QWidget *parent) :
     QWidget(parent)
@@ -57,6 +57,9 @@ WinHelpWindow::WinHelpWindow(QWidget *parent) :
     this->topicsProxy.setFilterRegExp(QRegExp(this->ui.indexSearchLine->text(),
             Qt::CaseInsensitive, QRegExp::FixedString));
     this->topicsProxy.setFilterKeyColumn(1);
+    tabMapper = new QSignalMapper(this);
+    connect(tabMapper, SIGNAL(mapped(QWidget*)), this,
+        SLOT(tabURLChanged(QWidget*)));
 }
 
 WinHelpWindow::~WinHelpWindow()
@@ -101,17 +104,76 @@ void WinHelpWindow::indexSearchListDoubleClicked(const QModelIndex & index)
     int topicIndex =
         this->topicsProxy.data(this->topicsProxy.index(
             index.row(), 0), Qt::DisplayRole).toInt();
-    HelpView *newView = new HelpView(this->winHelpFileLoader);
+    HelpBrowsingWidget *newView = new HelpBrowsingWidget(
+        this->winHelpFileLoader);
     QUrl topicUrl(QString("help://help.local/pages?topic=%1").arg(topicIndex));
-    newView->setUrl(topicUrl);
+    newView->goToURL(topicUrl);
     this->ui.pagesTabs->addTab(newView,
         this->winHelpFileLoader.getHelpFileTopicCaption(topicIndex));
     this->ui.pagesTabs->setCurrentIndex(this->ui.pagesTabs->count() - 1);
+    connect(newView, SIGNAL(urlChanged(const QUrl &)), tabMapper, SLOT(map()));
+    tabMapper->setMapping(newView, newView);
 }
 
 void WinHelpWindow::pagesTabsTabCloseRequested(int index)
 {
     this->ui.pagesTabs->removeTab(index);
+}
+
+void WinHelpWindow::tabURLChanged(QWidget *widget)
+{
+    int tabIndex = this->ui.pagesTabs->indexOf(widget);
+    if(tabIndex != -1)
+    {
+        HelpBrowsingWidget *helpBrowser = qobject_cast<HelpBrowsingWidget *>(
+            widget);
+        if(helpBrowser != NULL)
+        {
+            QUrl newUrl = helpBrowser->getURL();
+            if(newUrl.hasQuery())
+            {
+                if(newUrl.hasQueryItem(QString("topic")))
+                {
+                    bool isInt = false;
+                    int topicIndex =
+                        newUrl.queryItemValue(QString("topic")).toInt(&isInt,
+                        10);
+                    if(isInt)
+                    {
+                        this->ui.pagesTabs->setTabText(tabIndex,
+                            this->winHelpFileLoader.getHelpFileTopicCaption(
+                                topicIndex));
+                    }
+                }
+                else
+                {
+                    if(newUrl.hasQueryItem(QString("block")) &&
+                        newUrl.hasQueryItem(QString("character")))
+                    {
+                        bool topicBlockValid = true;
+                        int block =
+                            newUrl.queryItemValue(QString("block")).toInt(
+                            &topicBlockValid,
+                            10);
+                        bool topicCharacterValid = true;
+                        int character =
+                            newUrl.queryItemValue(QString("character")).toInt(
+                            &topicCharacterValid,
+                            10);
+                        if(topicBlockValid && topicCharacterValid)
+                        {
+                            int topicIndex = winHelpFileLoader.getTopicIndex(
+                                block,
+                                character);
+                            this->ui.pagesTabs->setTabText(tabIndex,
+                                this->winHelpFileLoader.getHelpFileTopicCaption(
+                                    topicIndex));
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 void WinHelpWindow::closeEvent(QCloseEvent *event)

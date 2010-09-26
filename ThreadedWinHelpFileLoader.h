@@ -41,6 +41,7 @@ public:
     int getHelpFileTopicCount();
     QString getHelpFileTopicCaption(int index);
     QString getHelpFileTopicContents(int index);
+    int getTopicIndex(int block, int character);
 
 signals:
     void loadedFile(bool isSuccessfull,

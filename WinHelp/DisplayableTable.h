@@ -259,7 +259,8 @@ public:
         size_t srcSize,
         const void *textSrc,
         size_t textSize,
-        QTextCodec *codec);
+        QTextCodec *codec,
+        int topicDescriptorNumber, int topicNumber);
     DisplayableTable(const DisplayableTable& rhs);
     virtual ~DisplayableTable();
     DisplayableTable & operator=(const DisplayableTable & rhs);

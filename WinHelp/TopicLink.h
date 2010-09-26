@@ -27,13 +27,21 @@
 
 class TopicLink
 {
+private:
+    int topicDescriptorNumber;
+    int topicNumber;
 protected:
+    int characterCount;
     TopicLink();
+    TopicLink(int topicDescriptorNumber, int topicNumber);
     TopicLink(const TopicLink &rhs);
     TopicLink &operator=(const TopicLink &rhs);
 public:
     virtual ~TopicLink();
     virtual QList<TopicOffset> getHyperlinks() const = 0;
+    virtual int getTopicDescriptorNumber() const;
+    virtual int getTopicLinkNumber() const;
+    virtual int getCharacterCount() const;
 };
 
 #endif /* TOPICLINK_H_ */

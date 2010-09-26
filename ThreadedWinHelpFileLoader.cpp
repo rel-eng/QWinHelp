@@ -167,3 +167,12 @@ QString ThreadedWinHelpFileLoader::getHelpFileTopicContents(int index)
     mutex.unlock();
     return topicContents;
 }
+
+int ThreadedWinHelpFileLoader::getTopicIndex(int block, int character)
+{
+    mutex.lock();
+    int topicIndex = helpFile->getTopicFile().getTopicIndexByTopicOffset(block,
+        character);
+    mutex.unlock();
+    return topicIndex;
+}

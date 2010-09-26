@@ -52,7 +52,8 @@ public:
         qint64 decompressSize,
         const void *textSrc,
         size_t textSize,
-        QTextCodec *codec);
+        QTextCodec *codec,
+        int topicDescriptorNumber, int topicNumber);
     TopicHeaderNew(const TopicHeaderNew& rhs);
     virtual ~TopicHeaderNew();
     TopicHeaderNew & operator=(const TopicHeaderNew & rhs);

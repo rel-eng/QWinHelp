@@ -177,6 +177,7 @@ public:
     int getTopicsCount() const;
     QString getTopicCaption(int index) const;
     QString getTopicContents(int index) const;
+    int getTopicIndexByTopicOffset(int block, int character) const;
 };
 
 #endif /* WINHELPTOPICFILE_H_ */

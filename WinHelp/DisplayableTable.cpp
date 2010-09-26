@@ -24,7 +24,7 @@
 
 #include <stdexcept>
 
-DisplayableTable::DisplayableTable() : DisplayableText(0x23),
+DisplayableTable::DisplayableTable() : DisplayableText(0x23, 0, 0),
     topicSize(Q_INT64_C(0)), topicLength(Q_INT64_C(0)), numberOfColumns(0),
     tableType(0), minTableWidth(0), columns(), paragraphs(), texts()
 {
@@ -35,7 +35,9 @@ DisplayableTable::DisplayableTable(const void *src,
     size_t srcSize,
     const void *textSrc,
     size_t textSize,
-    QTextCodec *codec) : DisplayableText(0x23), columns(), paragraphs(), texts()
+    QTextCodec *codec,
+    int topicDescriptorNumber, int topicNumber) : DisplayableText(0x23,
+    topicDescriptorNumber, topicNumber), columns(), paragraphs(), texts()
 {
     if(codec == NULL)
     {
@@ -51,10 +53,11 @@ DisplayableTable::DisplayableTable(const void *src,
                 bytesRead));
         offset += bytesRead;
         PRINT_DBG("        Topic size: %lld", this->topicSize);
-        topicLength =
+        this->topicLength =
             static_cast<qint64>(getCompressedUnsignedWord(src, offset, srcSize,
                 bytesRead));
         offset += bytesRead;
+        this->characterCount = this->topicLength;
         PRINT_DBG("        Topic length: %lld", this->topicLength);
         checkOffsetLengthSize(offset, static_cast<size_t>(1), srcSize);
         this->numberOfColumns =

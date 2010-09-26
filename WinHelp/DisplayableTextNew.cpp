@@ -24,7 +24,7 @@
 
 #include <stdexcept>
 
-DisplayableTextNew::DisplayableTextNew() : DisplayableText(0x20),
+DisplayableTextNew::DisplayableTextNew() : DisplayableText(0x20, 0, 0),
     topicSize(Q_INT64_C(0)), topicLength(Q_INT64_C(0)), paragraphs(), texts()
 {
     PRINT_DBG("Displayable text new default constructor");
@@ -34,7 +34,9 @@ DisplayableTextNew::DisplayableTextNew(const void *src,
     size_t srcSize,
     const void *textSrc,
     size_t textSize,
-    QTextCodec *codec) : DisplayableText(0x20), paragraphs(), texts()
+    QTextCodec *codec,
+    int topicDescriptorNumber, int topicNumber) : DisplayableText(0x20,
+    topicDescriptorNumber, topicNumber), paragraphs(), texts()
 {
     if(codec == NULL)
     {
@@ -50,11 +52,12 @@ DisplayableTextNew::DisplayableTextNew(const void *src,
                 bytesRead));
         offset += bytesRead;
         PRINT_DBG("        Topic size: %lld", this->topicSize);
-        topicLength =
+        this->topicLength =
             static_cast<qint64>(getCompressedUnsignedWord(src, offset, srcSize,
                 bytesRead));
         offset += bytesRead;
-        PRINT_DBG("        Topic length: %lld", topicLength);
+        this->characterCount = this->topicLength;
+        PRINT_DBG("        Topic length: %lld", this->topicLength);
         ParagraphInfo paragraphInfo;
         checkOffsetLengthSize(offset, static_cast<size_t>(1), srcSize);
         quint8 unknownUnsignedByte =

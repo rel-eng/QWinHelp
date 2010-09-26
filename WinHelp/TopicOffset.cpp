@@ -25,7 +25,7 @@
 #include <stdexcept>
 
 TopicOffset::TopicOffset() : topicBlockNumber(Q_INT64_C(0)),
-    characterCount(Q_INT64_C(0))
+    characterCount(Q_INT64_C(0)), rawValue(0)
 {
     PRINT_DBG("Topic offset default constructor");
 }
@@ -35,6 +35,8 @@ TopicOffset::TopicOffset(qint64 topicBlockNumber,
     characterCount(characterCount)
 {
     PRINT_DBG("Topic offset constructor");
+    this->rawValue = characterCount & 0x7FFF &
+        (((topicBlockNumber & 0x1FFFF) << 15) & 0xFFFF8000);
 }
 
 TopicOffset::TopicOffset(QFile &file, qint64 off)
@@ -45,6 +47,8 @@ TopicOffset::TopicOffset(QFile &file, qint64 off)
     quint8 topicOffsetIn1 = readUnsignedByte(file);
     quint8 topicOffsetIn2 = readUnsignedByte(file);
     quint8 topicOffsetIn3 = readUnsignedByte(file);
+    seekFile(file, off);
+    this->rawValue = readSignedDWord(file);
     qint64 byte_0 = static_cast<qint64>(topicOffsetIn0);
     qint64 byte_1l = static_cast<qint64>(topicOffsetIn1 & 0x7F);
     qint64 byte_1h = static_cast<qint64>((topicOffsetIn1 & 0x80) >> 7);
@@ -83,6 +87,7 @@ TopicOffset::TopicOffset(const void *src, size_t srcSize)
         getUnsignedByte(reinterpret_cast<const void *>(reinterpret_cast<const
                 quint8
                 *>(src) + static_cast<size_t>(3)));
+    this->rawValue = getSignedDWord(src);
     qint64 byte_0 = static_cast<qint64>(topicOffsetIn0);
     qint64 byte_1l = static_cast<qint64>(topicOffsetIn1 & 0x7F);
     qint64 byte_1h = static_cast<qint64>((topicOffsetIn1 & 0x80) >> 7);
@@ -102,7 +107,8 @@ TopicOffset::TopicOffset(const void *src, size_t srcSize)
 }
 
 TopicOffset::TopicOffset(const TopicOffset& rhs) : topicBlockNumber(rhs.
-    topicBlockNumber), characterCount(rhs.characterCount)
+    topicBlockNumber), characterCount(rhs.characterCount),
+    rawValue(rhs.rawValue)
 {
     PRINT_DBG("Topic offset copy constructor");
 }
@@ -114,6 +120,7 @@ TopicOffset & TopicOffset::operator=(const TopicOffset & rhs)
     {
         this->topicBlockNumber = rhs.topicBlockNumber;
         this->characterCount = rhs.characterCount;
+        this->rawValue = rhs.rawValue;
     }
     return *this;
 }
@@ -126,6 +133,11 @@ qint64 TopicOffset::getTopicBlockNumber() const
 qint64 TopicOffset::getCharacterCount() const
 {
     return this->characterCount;
+}
+
+qint32 TopicOffset::getRawValue() const
+{
+    return this->rawValue;
 }
 
 TopicOffset::~TopicOffset()

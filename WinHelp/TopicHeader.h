@@ -29,6 +29,7 @@ class TopicHeader : public TopicLink
 {
 protected:
     TopicHeader();
+    TopicHeader(int topicDescriptorNumber, int topicNumber);
     TopicHeader(const TopicHeader &rhs);
     TopicHeader &operator=(const TopicHeader &rhs);
 public:

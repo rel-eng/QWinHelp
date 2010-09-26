@@ -226,7 +226,8 @@ public:
         size_t srcSize,
         const void *textSrc,
         size_t textSize,
-        QTextCodec *codec);
+        QTextCodec *codec,
+        int topicDescriptorNumber, int topicNumber);
     DisplayableTextOld(const DisplayableTextOld& rhs);
     virtual ~DisplayableTextOld();
     DisplayableTextOld & operator=(const DisplayableTextOld & rhs);

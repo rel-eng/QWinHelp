@@ -23,7 +23,9 @@ DisplayableText::DisplayableText() : TopicLink(), type(0)
 {
 }
 
-DisplayableText::DisplayableText(quint8 type) : TopicLink(), type(type)
+DisplayableText::DisplayableText(quint8 type,
+    int topicDescriptorNumber,
+    int topicNumber) : TopicLink(topicDescriptorNumber, topicNumber), type(type)
 {
 }
 
