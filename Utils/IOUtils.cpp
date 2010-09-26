@@ -382,6 +382,31 @@ QRgb readBGRADword(QFile &file)
         static_cast<int>(alphaIn));
 }
 
+QRgb readRGBBytes(QFile &file)
+{
+    quint8 redIn = 0;
+    if (file.read(reinterpret_cast<char *> (&redIn),
+            Q_INT64_C(1)) != Q_INT64_C(1))
+    {
+        throw std::runtime_error("Unable to read file");
+    }
+    quint8 greenIn = 0;
+    if (file.read(reinterpret_cast<char *> (&greenIn),
+            Q_INT64_C(1)) != Q_INT64_C(1))
+    {
+        throw std::runtime_error("Unable to read file");
+    }
+    quint8 blueIn = 0;
+    if (file.read(reinterpret_cast<char *> (&blueIn),
+            Q_INT64_C(1)) != Q_INT64_C(1))
+    {
+        throw std::runtime_error("Unable to read file");
+    }
+    return qRgb(static_cast<int>(redIn),
+        static_cast<int>(greenIn),
+        static_cast<int>(blueIn));
+}
+
 quint8 getUnsignedByte(const void *src)
 {
     quint8 result = 0;

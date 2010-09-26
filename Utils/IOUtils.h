@@ -50,6 +50,7 @@ QRgb readRGBDword(QFile &file);
 QRgb readRGBADword(QFile &file);
 QRgb readBGRDword(QFile &file);
 QRgb readBGRADword(QFile &file);
+QRgb readRGBBytes(QFile &file);
 quint8 getUnsignedByte(const void *src);
 qint8 getSignedByte(const void *src);
 quint16 getUnsignedWord(const void *src);
