@@ -22,7 +22,14 @@
 #include "Utils/IOUtils.h"
 #include "Utils/DebugUtils.h"
 
-NewFontDescriptor::NewFontDescriptor() : facenameIndex(0),  fgColor(qRgb(0x00, 0x00, 0x00)), bgColor(qRgb(0xFF, 0xFF, 0xFF)), height(0), width(0), escapement(0), orientation(0), weight(0), pitch(0), family(0), italic(false), underline(false), strikeOut(false), charset(0), outPrecision(0), clipPrecision(0), quality(0)
+NewFontDescriptor::NewFontDescriptor() : facenameIndex(0),
+    fgColor(qRgb(0x00, 0x00,
+        0x00)),
+    bgColor(qRgb(0xFF, 0xFF,
+        0xFF)), height(0), width(0), escapement(0), orientation(0), weight(0),
+    pitch(0),
+    family(0), italic(false), underline(false), strikeOut(false), charset(0),
+    outPrecision(0), clipPrecision(0), quality(0)
 {
     PRINT_DBG("New font descriptor default constructor");
 }
@@ -43,8 +50,11 @@ NewFontDescriptor::NewFontDescriptor(QFile &file, qint64 off)
     PRINT_DBG("        Bg Red: %d", qRed(this->bgColor));
     PRINT_DBG("        Bg Green: %d", qGreen(this->bgColor));
     PRINT_DBG("        Bg Blue: %d", qBlue(this->bgColor));
-    quint8 unknownBytes2[5] = {0, 0, 0, 0, 0};
-    fillBuffer(file, Q_INT64_C(5), reinterpret_cast<void *>(&unknownBytes2), static_cast<size_t>(5));
+    quint8 unknownBytes2[5] = {
+        0, 0, 0, 0, 0
+    };
+    fillBuffer(file, Q_INT64_C(
+            5), reinterpret_cast<void *>(&unknownBytes2), static_cast<size_t>(5));
     PRINT_DBG("        Unknown byte 2-1: %d", unknownBytes2[0]);
     PRINT_DBG("        Unknown byte 2-2: %d", unknownBytes2[1]);
     PRINT_DBG("        Unknown byte 2-3: %d", unknownBytes2[2]);
@@ -62,21 +72,21 @@ NewFontDescriptor::NewFontDescriptor(QFile &file, qint64 off)
     PRINT_DBG("        Weight: %d", this->weight);
     quint8 italicByte = readUnsignedByte(file);
     this->italic = false;
-    if(italicByte!=0)
+    if(italicByte != 0)
     {
         this->italic = true;
         PRINT_DBG("        Italic font");
     }
     quint8 underlineByte = readUnsignedByte(file);
     this->underline = false;
-    if(underlineByte!=0)
+    if(underlineByte != 0)
     {
         this->underline = true;
         PRINT_DBG("        Underline font");
     }
     quint8 strikeoutByte = readUnsignedByte(file);
     this->strikeOut = false;
-    if(strikeoutByte!=0)
+    if(strikeoutByte != 0)
     {
         this->strikeOut = true;
         PRINT_DBG("        Strike out font");
@@ -92,13 +102,21 @@ NewFontDescriptor::NewFontDescriptor(QFile &file, qint64 off)
     quint8 pitchAndFamily = readUnsignedByte(file);
     this->pitch = pitchAndFamily & 0x03;
     PRINT_DBG("        Pitch: %d", this->pitch);
-    this->family = (((pitchAndFamily & 0xF0)>>4)&0x0F);
+    this->family = (((pitchAndFamily & 0xF0) >> 4) & 0x0F);
     PRINT_DBG("        Family: %d", this->family);
     PRINT_DBG("New font descriptor loaded successfully");
 }
 
 
-NewFontDescriptor::NewFontDescriptor(const NewFontDescriptor& rhs) : facenameIndex(rhs.facenameIndex),  fgColor(rhs.fgColor), bgColor(rhs.bgColor), height(rhs.height), width(rhs.width), escapement(rhs.escapement), orientation(rhs.orientation), weight(rhs.weight), pitch(rhs.pitch), family(rhs.family), italic(rhs.italic), underline(rhs.underline), strikeOut(rhs.strikeOut), charset(rhs.charset), outPrecision(rhs.outPrecision), clipPrecision(rhs.clipPrecision), quality(rhs.quality)
+NewFontDescriptor::NewFontDescriptor(const NewFontDescriptor& rhs) :
+    facenameIndex(rhs.facenameIndex),  fgColor(rhs.fgColor),
+    bgColor(rhs.bgColor),
+    height(rhs.height), width(rhs.width), escapement(rhs.escapement),
+    orientation(rhs.orientation), weight(rhs.weight), pitch(rhs.pitch),
+    family(rhs.family), italic(rhs.italic), underline(rhs.underline),
+    strikeOut(rhs.strikeOut), charset(rhs.charset),
+    outPrecision(rhs.outPrecision),
+    clipPrecision(rhs.clipPrecision), quality(rhs.quality)
 {
     PRINT_DBG("New font descriptor copy constructor");
 }
