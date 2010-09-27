@@ -1,4 +1,4 @@
-/* QWinHelp main.
+/* MVB font descriptor implementation.
 
    Copyright (C) 2010 rel-eng
 
@@ -22,7 +22,8 @@
 #include "Utils/IOUtils.h"
 #include "Utils/DebugUtils.h"
 
-MVBFontDescriptor::MVBFontDescriptor() : facenameIndex(0), styleNumber(0),
+MVBFontDescriptor::MVBFontDescriptor() : FontDescriptor(MVB_FONT_DESCRIPTOR),
+    facenameIndex(0), styleNumber(0),
     fgColor(qRgb(0x00, 0x00,
         0x00)),
     bgColor(qRgb(0xFF, 0xFF,
@@ -34,7 +35,8 @@ MVBFontDescriptor::MVBFontDescriptor() : facenameIndex(0), styleNumber(0),
     PRINT_DBG("MVB font descriptor default constructor");
 }
 
-MVBFontDescriptor::MVBFontDescriptor(QFile &file, qint64 off)
+MVBFontDescriptor::MVBFontDescriptor(QFile &file,
+    qint64 off) : FontDescriptor(MVB_FONT_DESCRIPTOR)
 {
     PRINT_DBG("Reading MVB font descriptor at %lld", off);
     seekFile(file, off);
@@ -107,7 +109,8 @@ MVBFontDescriptor::MVBFontDescriptor(QFile &file, qint64 off)
 
 
 MVBFontDescriptor::MVBFontDescriptor(const MVBFontDescriptor& rhs) :
-    facenameIndex(rhs.facenameIndex), styleNumber(rhs.styleNumber),
+    FontDescriptor(rhs), facenameIndex(rhs.facenameIndex),
+    styleNumber(rhs.styleNumber),
     fgColor(rhs.fgColor), bgColor(rhs.bgColor), height(rhs.height),
     width(rhs.width),
     escapement(rhs.escapement), orientation(rhs.orientation), weight(rhs.weight),
@@ -124,6 +127,7 @@ MVBFontDescriptor & MVBFontDescriptor::operator=(const MVBFontDescriptor & rhs)
     PRINT_DBG("MVB font descriptor assignment operator");
     if (this != &rhs)
     {
+        FontDescriptor::operator =(rhs);
         this->facenameIndex = rhs.facenameIndex;
         this->styleNumber = rhs.styleNumber;
         this->fgColor = rhs.fgColor;

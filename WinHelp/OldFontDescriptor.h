@@ -24,6 +24,8 @@
 #include <QFile>
 #include <QColor>
 
+#include "FontDescriptor.h"
+
 enum OldFontFamily : quint8
 {
     OLD_FAM_MODERN = 0x01,
@@ -33,7 +35,7 @@ enum OldFontFamily : quint8
     OLD_FAM_DECOR = 0x05
 };
 
-class OldFontDescriptor
+class OldFontDescriptor : public FontDescriptor
 {
 private:
     bool bold;

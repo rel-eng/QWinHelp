@@ -1,4 +1,4 @@
-/* QWinHelp main.
+/* MVB font descriptor definition.
 
    Copyright (C) 2010 rel-eng
 
@@ -23,6 +23,8 @@
 #include <QtGlobal>
 #include <QFile>
 #include <QColor>
+
+#include "FontDescriptor.h"
 
 enum MVBFontPitch : quint8
 {
@@ -117,7 +119,7 @@ enum MVBFontQuality : quint8
     MVB_FONT_CLEARTYPE_NATURAL_QUALITY = 6
 };
 
-class MVBFontDescriptor
+class MVBFontDescriptor : public FontDescriptor
 {
 private:
     quint16 facenameIndex;

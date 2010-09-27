@@ -24,6 +24,8 @@
 #include <QFile>
 #include <QColor>
 
+#include "FontDescriptor.h"
+
 enum NewFontPitch : quint8
 {
     NEW_FONT_DEFAULT_PITCH = 0x00,
@@ -117,7 +119,7 @@ enum NewFontQuality : quint8
     NEW_FONT_CLEARTYPE_NATURAL_QUALITY = 6
 };
 
-class NewFontDescriptor
+class NewFontDescriptor : public FontDescriptor
 {
 private:
     quint16 facenameIndex;

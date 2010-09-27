@@ -93,6 +93,12 @@ WinHelpFile::WinHelpFile(QString filename) : file(filename)
             this->hallCompression = false;
         }
     }
+    if(directory.isFileExists(QString("|FONT")))
+    {
+        this->fontFile =
+            WinHelpFontFile(file, directory.getFileOffset(QString(
+                    "|FONT")), this->system.getCodec());
+    }
     if(!directory.isFileExists(QString("|TOPIC")))
     {
         throw std::runtime_error("No |TOPIC file found");

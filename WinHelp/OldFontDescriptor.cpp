@@ -22,7 +22,8 @@
 #include "Utils/IOUtils.h"
 #include "Utils/DebugUtils.h"
 
-OldFontDescriptor::OldFontDescriptor() : bold(false), italic(false),
+OldFontDescriptor::OldFontDescriptor() : FontDescriptor(OLD_FONT_DESCRIPTOR),
+    bold(false), italic(false),
     underline(false), strikeOut(false), doubleUnderline(false), smallCaps(false),
     halfPoints(0), fontFamily(0), facenameIndex(0),
     fgColor(qRgb(0x00, 0x00, 0x00)), bgColor(qRgb(0xFF, 0xFF, 0xFF))
@@ -30,7 +31,8 @@ OldFontDescriptor::OldFontDescriptor() : bold(false), italic(false),
     PRINT_DBG("Old font descriptor default constructor");
 }
 
-OldFontDescriptor::OldFontDescriptor(QFile &file, qint64 off)
+OldFontDescriptor::OldFontDescriptor(QFile &file,
+    qint64 off) : FontDescriptor(OLD_FONT_DESCRIPTOR)
 {
     PRINT_DBG("Reading Old font descriptor at %lld", off);
     seekFile(file, off);
@@ -83,7 +85,8 @@ OldFontDescriptor::OldFontDescriptor(QFile &file, qint64 off)
     PRINT_DBG("Old font descriptor loaded successfully");
 }
 
-OldFontDescriptor::OldFontDescriptor(const OldFontDescriptor& rhs) : bold(rhs.
+OldFontDescriptor::OldFontDescriptor(const OldFontDescriptor& rhs) :
+    FontDescriptor(rhs), bold(rhs.
     bold), italic(rhs.italic), underline(rhs.underline),
     strikeOut(rhs.strikeOut),
     doubleUnderline(rhs.doubleUnderline), smallCaps(rhs.smallCaps),
@@ -98,6 +101,7 @@ OldFontDescriptor & OldFontDescriptor::operator=(const OldFontDescriptor & rhs)
     PRINT_DBG("Old font descriptor assignment operator");
     if (this != &rhs)
     {
+        FontDescriptor::operator =(rhs);
         this->bold = rhs.bold;
         this->italic = rhs.italic;
         this->underline = rhs.underline;

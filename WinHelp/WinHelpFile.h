@@ -29,6 +29,7 @@
 #include "WinHelpPhrIndexFile.h"
 #include "WinHelpPhrImageFile.h"
 #include "WinHelpTopicFile.h"
+#include "WinHelpFontFile.h"
 
 class WinHelpFile
 {
@@ -39,6 +40,7 @@ private:
     WinHelpPhrIndexFile phrasesNewIndex;
     WinHelpPhrImageFile phrasesNewImage;
     WinHelpTopicFile topicFile;
+    WinHelpFontFile fontFile;
     WinHelpFile(const WinHelpFile& rhs);
     WinHelpFile & operator=(const WinHelpFile & rhs);
     bool phraseCompressed;

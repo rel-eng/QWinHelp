@@ -92,7 +92,10 @@ HEADERS += HelpReply.h \
     helpbrowsingwidget.h \
     WinHelp/OldFontDescriptor.h \
     WinHelp/NewFontDescriptor.h \
-    WinHelp/MVBFontDescriptor.h
+    WinHelp/MVBFontDescriptor.h \
+    WinHelp/WinHelpFontFile.h \
+    WinHelp/FontDescriptor.h \
+    WinHelp/FontStyle.h
 SOURCES += HelpReply.cpp \
     HelpAccessManager.cpp \
     HelpView.cpp \
@@ -161,7 +164,10 @@ SOURCES += HelpReply.cpp \
     helpbrowsingwidget.cpp \
     WinHelp/OldFontDescriptor.cpp \
     WinHelp/NewFontDescriptor.cpp \
-    WinHelp/MVBFontDescriptor.cpp
+    WinHelp/MVBFontDescriptor.cpp \
+    WinHelp/WinHelpFontFile.cpp \
+    WinHelp/FontDescriptor.cpp \
+    WinHelp/FontStyle.cpp
 FORMS += winhelpwindow.ui \
     qwinhelp.ui
 RESOURCES +=

@@ -22,7 +22,8 @@
 #include "Utils/IOUtils.h"
 #include "Utils/DebugUtils.h"
 
-NewFontDescriptor::NewFontDescriptor() : facenameIndex(0),
+NewFontDescriptor::NewFontDescriptor() : FontDescriptor(NEW_FONT_DESCRIPTOR),
+    facenameIndex(0),
     fgColor(qRgb(0x00, 0x00,
         0x00)),
     bgColor(qRgb(0xFF, 0xFF,
@@ -34,7 +35,8 @@ NewFontDescriptor::NewFontDescriptor() : facenameIndex(0),
     PRINT_DBG("New font descriptor default constructor");
 }
 
-NewFontDescriptor::NewFontDescriptor(QFile &file, qint64 off)
+NewFontDescriptor::NewFontDescriptor(QFile &file,
+    qint64 off) : FontDescriptor(NEW_FONT_DESCRIPTOR)
 {
     PRINT_DBG("Reading New font descriptor at %lld", off);
     seekFile(file, off);
@@ -109,7 +111,7 @@ NewFontDescriptor::NewFontDescriptor(QFile &file, qint64 off)
 
 
 NewFontDescriptor::NewFontDescriptor(const NewFontDescriptor& rhs) :
-    facenameIndex(rhs.facenameIndex),  fgColor(rhs.fgColor),
+    FontDescriptor(rhs), facenameIndex(rhs.facenameIndex),  fgColor(rhs.fgColor),
     bgColor(rhs.bgColor),
     height(rhs.height), width(rhs.width), escapement(rhs.escapement),
     orientation(rhs.orientation), weight(rhs.weight), pitch(rhs.pitch),
@@ -126,6 +128,7 @@ NewFontDescriptor & NewFontDescriptor::operator=(const NewFontDescriptor & rhs)
     PRINT_DBG("New font descriptor assignment operator");
     if (this != &rhs)
     {
+        FontDescriptor::operator =(rhs);
         this->facenameIndex = rhs.facenameIndex;
         this->fgColor = rhs.fgColor;
         this->bgColor = rhs.bgColor;
