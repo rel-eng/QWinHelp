@@ -152,3 +152,8 @@ const WinHelpTopicFile & WinHelpFile::getTopicFile() const
 {
     return this->topicFile;
 }
+
+const WinHelpFontFile & WinHelpFile::getFontFile() const
+{
+    return this->fontFile;
+}

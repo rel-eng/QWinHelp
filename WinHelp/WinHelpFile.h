@@ -50,6 +50,7 @@ public:
     virtual ~WinHelpFile();
     const WinHelpSystemFile & getSystemFile() const;
     const WinHelpTopicFile & getTopicFile() const;
+    const WinHelpFontFile & getFontFile() const;
 };
 
 #endif /* WINHELPFILE_H_ */

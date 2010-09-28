@@ -38,31 +38,37 @@ OldFontDescriptor::OldFontDescriptor(QFile &file,
     seekFile(file, off);
     quint8 attributes = readUnsignedByte(file);
     PRINT_DBG("        Attributes: %d", attributes);
+    this->bold = false;
     if((attributes & 0x01) != 0)
     {
         this->bold = true;
         PRINT_DBG("        Bold font");
     }
+    this->italic = false;
     if((attributes & 0x02) != 0)
     {
         this->italic = true;
         PRINT_DBG("        Italic font");
     }
+    this->underline = false;
     if((attributes & 0x04) != 0)
     {
         this->underline = true;
         PRINT_DBG("        Underline font");
     }
+    this->strikeOut = false;
     if((attributes & 0x08) != 0)
     {
         this->strikeOut = true;
         PRINT_DBG("        Strike out font");
     }
+    this->doubleUnderline = false;
     if((attributes & 0x10) != 0)
     {
         this->doubleUnderline = true;
         PRINT_DBG("        Double underline font");
     }
+    this->smallCaps = false;
     if((attributes & 0x20) != 0)
     {
         this->smallCaps = true;

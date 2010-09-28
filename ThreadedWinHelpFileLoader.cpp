@@ -20,6 +20,7 @@
 #include "ThreadedWinHelpFileLoader.h"
 
 #include <QMutexLocker>
+#include<QDateTime>
 
 #include <QtDebug>
 
@@ -175,4 +176,12 @@ int ThreadedWinHelpFileLoader::getTopicIndex(int block, int character)
         character);
     mutex.unlock();
     return topicIndex;
+}
+
+QString ThreadedWinHelpFileLoader::getFontStyles()
+{
+    mutex.lock();
+    QString fontStyles = helpFile->getFontFile().getStyle();
+    mutex.unlock();
+    return fontStyles;
 }

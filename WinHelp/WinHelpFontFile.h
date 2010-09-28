@@ -49,12 +49,14 @@ class WinHelpFontFile
     QList<QSharedPointer<FontDescriptor> > fontDescriptors;
     QList<FontStyle> fontStyles;
     QList<QString> charMapTablesNames;
+    QString styleDescription;
 public:
     WinHelpFontFile();
     WinHelpFontFile(QFile &file, qint64 off, QTextCodec *codec);
     WinHelpFontFile(const WinHelpFontFile &rhs);
     virtual ~WinHelpFontFile();
     const WinHelpFontFile & operator=(const WinHelpFontFile &rhs);
+    QString getStyle() const;
 };
 
 #endif // WINHELPFONTFILE_H

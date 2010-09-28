@@ -2061,6 +2061,9 @@ QString DisplayableTextNew::getHTML(bool &empty) const
     QString result;
     int textLength = 0;
     bool isInParagraph = false;
+    bool isInFontDef = false;
+    qint16 fontDefNum = 0;
+    bool fontSet = false;
     QString openingPara = "<p style=\"";
     if(this->paragraphs.at(0).isRightAlignedParagraph)
     {
@@ -2080,27 +2083,27 @@ QString DisplayableTextNew::getHTML(bool &empty) const
     if(this->paragraphs.at(0).isFirstlineIndentPresent)
     {
         openingPara += QString("text-indent: %1pt;").arg(this->paragraphs.at(
-                0).firstlineIndent);
+                0).firstlineIndent/2);
     }
     if(this->paragraphs.at(0).isLeftIndentPresent)
     {
         openingPara += QString("margin-left: %1pt;").arg(this->paragraphs.at(
-                0).leftIndent);
+                0).leftIndent/2);
     }
     if(this->paragraphs.at(0).isRightIndentPresent)
     {
         openingPara += QString("margin-right: %1pt;").arg(this->paragraphs.at(
-                0).rightIndent);
+                0).rightIndent/2);
     }
     if(this->paragraphs.at(0).isSpacingAbovePresent)
     {
         openingPara += QString("margin-top: %1pt;").arg(this->paragraphs.at(
-                0).spacingAbove);
+                0).spacingAbove/2);
     }
     if(this->paragraphs.at(0).isSpacingBelowPresent)
     {
         openingPara += QString("margin-bottom: %1pt;").arg(
-            2 * this->paragraphs.at(0).spacingBelow);
+            2 * this->paragraphs.at(0).spacingBelow/2);
     }
     openingPara += "\">";
     for(int i = 0; i < this->texts.count(); i++)
@@ -2125,6 +2128,11 @@ QString DisplayableTextNew::getHTML(bool &empty) const
                     result += openingPara;
                     isInParagraph = true;
                 }
+                if(!isInFontDef && fontSet)
+                {
+                    result += QString("<font%1>").arg(fontDefNum);
+                    isInFontDef = true;
+                }
                 result += "&#x2011;";
                 break;
 
@@ -2133,6 +2141,11 @@ QString DisplayableTextNew::getHTML(bool &empty) const
                 {
                     result += openingPara;
                     isInParagraph = true;
+                }
+                if(!isInFontDef && fontSet)
+                {
+                    result += QString("<font%1>").arg(fontDefNum);
+                    isInFontDef = true;
                 }
                 result += escapedString;
                 result += "<br>";
@@ -2144,7 +2157,17 @@ QString DisplayableTextNew::getHTML(bool &empty) const
                     result += openingPara;
                     isInParagraph = true;
                 }
+                if(!isInFontDef && fontSet)
+                {
+                    result += QString("<font%1>").arg(fontDefNum);
+                    isInFontDef = true;
+                }
                 result += escapedString;
+                if(isInFontDef)
+                {
+                    result += QString("</font%1>").arg(fontDefNum);
+                    isInFontDef = false;
+                }
                 result += "</p>";
                 isInParagraph = false;
                 break;
@@ -2154,6 +2177,11 @@ QString DisplayableTextNew::getHTML(bool &empty) const
                 {
                     result += openingPara;
                     isInParagraph = true;
+                }
+                if(!isInFontDef && fontSet)
+                {
+                    result += QString("<font%1>").arg(fontDefNum);
+                    isInFontDef = true;
                 }
                 result += escapedString;
                 result += "&nbsp;";
@@ -2168,15 +2196,52 @@ QString DisplayableTextNew::getHTML(bool &empty) const
                     result += openingPara;
                     isInParagraph = true;
                 }
+                if(!isInFontDef && fontSet)
+                {
+                    result += QString("<font%1>").arg(fontDefNum);
+                    isInFontDef = true;
+                }
                 result += escapedString;
                 result += "&nbsp;&nbsp;&nbsp;&nbsp;";
                 break;
+
+            case FONT_NUMBER:
+            {
+                if(!isInParagraph)
+                {
+                    result += openingPara;
+                    isInParagraph = true;
+                }
+                if(!isInFontDef && fontSet)
+                {
+                    result += QString("<font%1>").arg(fontDefNum);
+                    isInFontDef = true;
+                }
+                result += escapedString;
+                if(isInFontDef)
+                {
+                    result += QString("</font%1>").arg(fontDefNum);
+                    isInFontDef = false;
+                }
+                qint16 fontNum = this->paragraphs.at(0).commands.at(i).dynamicCast<
+                FontNumberCommand>()->getFontNumber();
+                result += QString("<font%1>").arg(fontNum);
+                isInFontDef = true;
+                fontDefNum = fontNum;
+                fontSet = true;
+            }
+            break;
 
             default:
                 if(!isInParagraph)
                 {
                     result += openingPara;
                     isInParagraph = true;
+                }
+                if(!isInFontDef && fontSet)
+                {
+                    result += QString("<font%1>").arg(fontDefNum);
+                    isInFontDef = true;
                 }
                 result += escapedString;
             }

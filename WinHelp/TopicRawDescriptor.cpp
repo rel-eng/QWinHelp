@@ -82,7 +82,7 @@ void TopicRawDescriptor::transformToHtml(int topicIndex,
     {
         this->topicCaption = QString("UntitledTopic#%1").arg(topicIndex);
     }
-    this->topicContents = "<html><head><title>";
+    this->topicContents = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"help://help.local/pages?style=0\" /><title>";
     QString titleOrig = this->topicCaption;
     this->topicContents +=
         titleOrig.replace(QChar('&'), QString("&amp;"),

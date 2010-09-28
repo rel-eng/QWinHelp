@@ -30,7 +30,7 @@ WinHelpFontFile::WinHelpFontFile() : numFaceNames(0), numDescriptors(0),
     faceNamesOffset(0), descriptorsOffset(0), numStyles(0), stylesOffset(0),
     numCharMapTables(0), charMapTablesOffset(0), stylesValid(false),
     charMapTablesValid(false), faceNames(), fontDescriptors(), fontStyles(),
-    charMapTablesNames()
+    charMapTablesNames(), styleDescription()
 {
     PRINT_DBG("WinHelp font file default constructor");
 }
@@ -161,6 +161,438 @@ WinHelpFontFile::WinHelpFontFile(QFile &file, qint64 off,
                 this->charMapTablesNames.last().toLocal8Bit().data());
         }
     }
+    for(quint16 i = 0; i < this->numDescriptors; i++)
+    {
+        this->styleDescription += QString("font%1 {").arg(i);
+        switch(this->fontDescriptors.at(i)->getType())
+        {
+        case OLD_FONT_DESCRIPTOR:
+            {
+                QSharedPointer<OldFontDescriptor> descriptor = this->fontDescriptors.at(i).dynamicCast<OldFontDescriptor>();
+                if(descriptor->isItalic())
+                {
+                    this->styleDescription += "font-style: italic; ";
+                }
+                else
+                {
+                    this->styleDescription += "font-style: normal; ";
+                }
+                if(descriptor->isSmallCaps())
+                {
+                    this->styleDescription += "font-variant: small-caps; ";
+                }
+                else
+                {
+                    this->styleDescription += "font-variant: normal; ";
+                }
+                if(descriptor->isBold())
+                {
+                    this->styleDescription += "font-weight: bold; ";
+                }
+                else
+                {
+                    this->styleDescription += "font-weight: normal; ";
+                }
+                this->styleDescription += QString("font-size: %1pt; ").arg(descriptor->getHalfPoints()/2);
+                switch(descriptor->getFontFamily())
+                {
+                case OLD_FAM_MODERN:
+                    this->styleDescription += "font-family: monospace; ";
+                    break;
+                case OLD_FAM_ROMAN:
+                    this->styleDescription += "font-family: serif; ";
+                    break;
+                case OLD_FAM_SWISS_OR_TECH_OR_NIL:
+                    this->styleDescription += "font-family: sans-serif; ";
+                    break;
+                case OLD_FAM_SCRIPT:
+                    this->styleDescription += "font-family: cursive; ";
+                    break;
+                case OLD_FAM_DECOR:
+                    this->styleDescription += "font-family: fantasy; ";
+                    break;
+                }
+                if(descriptor->isUnderline())
+                {
+                    this->styleDescription += QString("border-bottom: 1px solid rgb(%1, %2, %3); ").arg(qRed(descriptor->getFgColor())).arg(qGreen(descriptor->getFgColor())).arg(qBlue(descriptor->getFgColor()));
+                }
+                if(descriptor->isStrikeOut())
+                {
+                    this->styleDescription += "text-decoration: line-through; ";
+                }
+                this->styleDescription += QString("color: rgb(%1, %2, %3); ").arg(qRed(descriptor->getFgColor())).arg(qGreen(descriptor->getFgColor())).arg(qBlue(descriptor->getFgColor()));
+            }
+            break;
+        case NEW_FONT_DESCRIPTOR:
+            {
+                QSharedPointer<NewFontDescriptor> descriptor = this->fontDescriptors.at(i).dynamicCast<NewFontDescriptor>();
+                if(descriptor->isItalic())
+                {
+                    this->styleDescription += "font-style: italic; ";
+                }
+                else
+                {
+                    this->styleDescription += "font-style: normal; ";
+                }
+                switch(descriptor->getFamily())
+                {
+                case OLD_FAM_MODERN:
+                    this->styleDescription += "font-family: monospace; ";
+                    break;
+                case OLD_FAM_ROMAN:
+                    this->styleDescription += "font-family: serif; ";
+                    break;
+                case OLD_FAM_SWISS_OR_TECH_OR_NIL:
+                    this->styleDescription += "font-family: sans-serif; ";
+                    break;
+                case OLD_FAM_SCRIPT:
+                    this->styleDescription += "font-family: cursive; ";
+                    break;
+                case OLD_FAM_DECOR:
+                    this->styleDescription += "font-family: fantasy; ";
+                    break;
+                }
+                if(descriptor->isUnderline())
+                {
+                    this->styleDescription += QString("border-bottom: 1px solid rgb(%1, %2, %3); ").arg(qRed(descriptor->getFgColor())).arg(qGreen(descriptor->getFgColor())).arg(qBlue(descriptor->getFgColor()));
+                }
+                if(descriptor->isStrikeOut())
+                {
+                    this->styleDescription += "text-decoration: line-through; ";
+                }
+                this->styleDescription += QString("font-size: %1pt; ").arg(descriptor->getHeight()/20);
+                this->styleDescription += QString("color: rgb(%1, %2, %3); ").arg(qRed(descriptor->getFgColor())).arg(qGreen(descriptor->getFgColor())).arg(qBlue(descriptor->getFgColor()));
+                switch(descriptor->getWeight())
+                {
+                case NEW_FW_DONTCARE:
+                    this->styleDescription += "font-weight: normal; ";
+                    break;
+                case NEW_FW_THIN:
+                    this->styleDescription += "font-weight: 100; ";
+                    break;
+                case NEW_FW_EXTRALIGHT_OR_ULTRALIGHT:
+                    this->styleDescription += "font-weight: 200; ";
+                    break;
+                case NEW_FW_LIGHT:
+                    this->styleDescription += "font-weight: 300; ";
+                    break;
+                case NEW_FW_NORMAL_OR_REGULAR:
+                    this->styleDescription += "font-weight: 400; ";
+                    break;
+                case NEW_FW_MEDIUM:
+                    this->styleDescription += "font-weight: 500; ";
+                    break;
+                case NEW_FW_SEMIBOLD_OR_DEMIBOLD:
+                    this->styleDescription += "font-weight: 600; ";
+                    break;
+                case NEW_FW_BOLD:
+                    this->styleDescription += "font-weight: 700; ";
+                    break;
+                case NEW_FW_EXTRABOLD_OR_ULTRABOLD:
+                    this->styleDescription += "font-weight: 800; ";
+                    break;
+                case NEW_FW_HEAVY_OR_BLACK:
+                    this->styleDescription += "font-weight: 900; ";
+                    break;
+                default:
+                    this->styleDescription += "font-weight: normal; ";
+                }
+            }
+            break;
+        case MVB_FONT_DESCRIPTOR:
+            {
+                QSharedPointer<MVBFontDescriptor> descriptor = this->fontDescriptors.at(i).dynamicCast<MVBFontDescriptor>();
+                if(descriptor->isItalic())
+                {
+                    this->styleDescription += "font-style: italic; ";
+                }
+                else
+                {
+                    this->styleDescription += "font-style: normal; ";
+                }
+                switch(descriptor->getFamily())
+                {
+                case OLD_FAM_MODERN:
+                    this->styleDescription += "font-family: monospace; ";
+                    break;
+                case OLD_FAM_ROMAN:
+                    this->styleDescription += "font-family: serif; ";
+                    break;
+                case OLD_FAM_SWISS_OR_TECH_OR_NIL:
+                    this->styleDescription += "font-family: sans-serif; ";
+                    break;
+                case OLD_FAM_SCRIPT:
+                    this->styleDescription += "font-family: cursive; ";
+                    break;
+                case OLD_FAM_DECOR:
+                    this->styleDescription += "font-family: fantasy; ";
+                    break;
+                }
+                if(descriptor->isUnderline())
+                {
+                    this->styleDescription += QString("border-bottom: 1px solid rgb(%1, %2, %3); ").arg(qRed(descriptor->getFgColor())).arg(qGreen(descriptor->getFgColor())).arg(qBlue(descriptor->getFgColor()));
+                }
+                if(descriptor->isStrikeOut())
+                {
+                    this->styleDescription += "text-decoration: line-through; ";
+                }
+                this->styleDescription += QString("font-size: %1pt; ").arg(descriptor->getHeight()/20);
+                this->styleDescription += QString("color: rgb(%1, %2, %3); ").arg(qRed(descriptor->getFgColor())).arg(qGreen(descriptor->getFgColor())).arg(qBlue(descriptor->getFgColor()));
+                switch(descriptor->getWeight())
+                {
+                case NEW_FW_DONTCARE:
+                    this->styleDescription += "font-weight: normal; ";
+                    break;
+                case NEW_FW_THIN:
+                    this->styleDescription += "font-weight: 100; ";
+                    break;
+                case NEW_FW_EXTRALIGHT_OR_ULTRALIGHT:
+                    this->styleDescription += "font-weight: 200; ";
+                    break;
+                case NEW_FW_LIGHT:
+                    this->styleDescription += "font-weight: 300; ";
+                    break;
+                case NEW_FW_NORMAL_OR_REGULAR:
+                    this->styleDescription += "font-weight: 400; ";
+                    break;
+                case NEW_FW_MEDIUM:
+                    this->styleDescription += "font-weight: 500; ";
+                    break;
+                case NEW_FW_SEMIBOLD_OR_DEMIBOLD:
+                    this->styleDescription += "font-weight: 600; ";
+                    break;
+                case NEW_FW_BOLD:
+                    this->styleDescription += "font-weight: 700; ";
+                    break;
+                case NEW_FW_EXTRABOLD_OR_ULTRABOLD:
+                    this->styleDescription += "font-weight: 800; ";
+                    break;
+                case NEW_FW_HEAVY_OR_BLACK:
+                    this->styleDescription += "font-weight: 900; ";
+                    break;
+                default:
+                    this->styleDescription += "font-weight: normal; ";
+                }
+            }
+            break;
+        default:
+            throw std::runtime_error("Invalid font descriptor type");
+        }
+        this->styleDescription += "}\n";
+        this->styleDescription += QString("linkfont%1 {").arg(i);
+        switch(this->fontDescriptors.at(i)->getType())
+        {
+        case OLD_FONT_DESCRIPTOR:
+            {
+                QSharedPointer<OldFontDescriptor> descriptor = this->fontDescriptors.at(i).dynamicCast<OldFontDescriptor>();
+                if(descriptor->isItalic())
+                {
+                    this->styleDescription += "font-style: italic; ";
+                }
+                else
+                {
+                    this->styleDescription += "font-style: normal; ";
+                }
+                if(descriptor->isSmallCaps())
+                {
+                    this->styleDescription += "font-variant: small-caps; ";
+                }
+                else
+                {
+                    this->styleDescription += "font-variant: normal; ";
+                }
+                if(descriptor->isBold())
+                {
+                    this->styleDescription += "font-weight: bold; ";
+                }
+                else
+                {
+                    this->styleDescription += "font-weight: normal; ";
+                }
+                this->styleDescription += QString("font-size: %1pt; ").arg(descriptor->getHalfPoints()/2);
+                switch(descriptor->getFontFamily())
+                {
+                case OLD_FAM_MODERN:
+                    this->styleDescription += "font-family: monospace; ";
+                    break;
+                case OLD_FAM_ROMAN:
+                    this->styleDescription += "font-family: serif; ";
+                    break;
+                case OLD_FAM_SWISS_OR_TECH_OR_NIL:
+                    this->styleDescription += "font-family: sans-serif; ";
+                    break;
+                case OLD_FAM_SCRIPT:
+                    this->styleDescription += "font-family: cursive; ";
+                    break;
+                case OLD_FAM_DECOR:
+                    this->styleDescription += "font-family: fantasy; ";
+                    break;
+                }
+                if(descriptor->isUnderline())
+                {
+                    this->styleDescription += QString("border-bottom: 1px solid; ");
+                }
+                if(descriptor->isStrikeOut())
+                {
+                    this->styleDescription += "text-decoration: line-through; ";
+                }
+            }
+            break;
+        case NEW_FONT_DESCRIPTOR:
+            {
+                QSharedPointer<NewFontDescriptor> descriptor = this->fontDescriptors.at(i).dynamicCast<NewFontDescriptor>();
+                if(descriptor->isItalic())
+                {
+                    this->styleDescription += "font-style: italic; ";
+                }
+                else
+                {
+                    this->styleDescription += "font-style: normal; ";
+                }
+                switch(descriptor->getFamily())
+                {
+                case OLD_FAM_MODERN:
+                    this->styleDescription += "font-family: monospace; ";
+                    break;
+                case OLD_FAM_ROMAN:
+                    this->styleDescription += "font-family: serif; ";
+                    break;
+                case OLD_FAM_SWISS_OR_TECH_OR_NIL:
+                    this->styleDescription += "font-family: sans-serif; ";
+                    break;
+                case OLD_FAM_SCRIPT:
+                    this->styleDescription += "font-family: cursive; ";
+                    break;
+                case OLD_FAM_DECOR:
+                    this->styleDescription += "font-family: fantasy; ";
+                    break;
+                }
+                if(descriptor->isUnderline())
+                {
+                    this->styleDescription += QString("border-bottom: 1px solid; ");
+                }
+                if(descriptor->isStrikeOut())
+                {
+                    this->styleDescription += "text-decoration: line-through; ";
+                }
+                this->styleDescription += QString("font-size: %1pt; ").arg(descriptor->getHeight()/20);
+                switch(descriptor->getWeight())
+                {
+                case NEW_FW_DONTCARE:
+                    this->styleDescription += "font-weight: normal; ";
+                    break;
+                case NEW_FW_THIN:
+                    this->styleDescription += "font-weight: 100; ";
+                    break;
+                case NEW_FW_EXTRALIGHT_OR_ULTRALIGHT:
+                    this->styleDescription += "font-weight: 200; ";
+                    break;
+                case NEW_FW_LIGHT:
+                    this->styleDescription += "font-weight: 300; ";
+                    break;
+                case NEW_FW_NORMAL_OR_REGULAR:
+                    this->styleDescription += "font-weight: 400; ";
+                    break;
+                case NEW_FW_MEDIUM:
+                    this->styleDescription += "font-weight: 500; ";
+                    break;
+                case NEW_FW_SEMIBOLD_OR_DEMIBOLD:
+                    this->styleDescription += "font-weight: 600; ";
+                    break;
+                case NEW_FW_BOLD:
+                    this->styleDescription += "font-weight: 700; ";
+                    break;
+                case NEW_FW_EXTRABOLD_OR_ULTRABOLD:
+                    this->styleDescription += "font-weight: 800; ";
+                    break;
+                case NEW_FW_HEAVY_OR_BLACK:
+                    this->styleDescription += "font-weight: 900; ";
+                    break;
+                default:
+                    this->styleDescription += "font-weight: normal; ";
+                }
+            }
+            break;
+        case MVB_FONT_DESCRIPTOR:
+            {
+                QSharedPointer<MVBFontDescriptor> descriptor = this->fontDescriptors.at(i).dynamicCast<MVBFontDescriptor>();
+                if(descriptor->isItalic())
+                {
+                    this->styleDescription += "font-style: italic; ";
+                }
+                else
+                {
+                    this->styleDescription += "font-style: normal; ";
+                }
+                switch(descriptor->getFamily())
+                {
+                case OLD_FAM_MODERN:
+                    this->styleDescription += "font-family: monospace; ";
+                    break;
+                case OLD_FAM_ROMAN:
+                    this->styleDescription += "font-family: serif; ";
+                    break;
+                case OLD_FAM_SWISS_OR_TECH_OR_NIL:
+                    this->styleDescription += "font-family: sans-serif; ";
+                    break;
+                case OLD_FAM_SCRIPT:
+                    this->styleDescription += "font-family: cursive; ";
+                    break;
+                case OLD_FAM_DECOR:
+                    this->styleDescription += "font-family: fantasy; ";
+                    break;
+                }
+                if(descriptor->isUnderline())
+                {
+                    this->styleDescription += QString("border-bottom: 1px solid; ");
+                }
+                if(descriptor->isStrikeOut())
+                {
+                    this->styleDescription += "text-decoration: line-through; ";
+                }
+                this->styleDescription += QString("font-size: %1pt; ").arg(descriptor->getHeight()/20);
+                switch(descriptor->getWeight())
+                {
+                case NEW_FW_DONTCARE:
+                    this->styleDescription += "font-weight: normal; ";
+                    break;
+                case NEW_FW_THIN:
+                    this->styleDescription += "font-weight: 100; ";
+                    break;
+                case NEW_FW_EXTRALIGHT_OR_ULTRALIGHT:
+                    this->styleDescription += "font-weight: 200; ";
+                    break;
+                case NEW_FW_LIGHT:
+                    this->styleDescription += "font-weight: 300; ";
+                    break;
+                case NEW_FW_NORMAL_OR_REGULAR:
+                    this->styleDescription += "font-weight: 400; ";
+                    break;
+                case NEW_FW_MEDIUM:
+                    this->styleDescription += "font-weight: 500; ";
+                    break;
+                case NEW_FW_SEMIBOLD_OR_DEMIBOLD:
+                    this->styleDescription += "font-weight: 600; ";
+                    break;
+                case NEW_FW_BOLD:
+                    this->styleDescription += "font-weight: 700; ";
+                    break;
+                case NEW_FW_EXTRABOLD_OR_ULTRABOLD:
+                    this->styleDescription += "font-weight: 800; ";
+                    break;
+                case NEW_FW_HEAVY_OR_BLACK:
+                    this->styleDescription += "font-weight: 900; ";
+                    break;
+                default:
+                    this->styleDescription += "font-weight: normal; ";
+                }
+            }
+            break;
+        default:
+            throw std::runtime_error("Invalid font descriptor type");
+        }
+        this->styleDescription += "}\n";
+    }
     PRINT_DBG("WinHelp font file loaded successfully");
 }
 
@@ -173,7 +605,7 @@ WinHelpFontFile::WinHelpFontFile(const WinHelpFontFile &rhs) : numFaceNames(rhs
     charMapTablesOffset(rhs.charMapTablesOffset), stylesValid(rhs.stylesValid),
     charMapTablesValid(rhs.charMapTablesValid), faceNames(rhs.faceNames),
     fontDescriptors(rhs.fontDescriptors), fontStyles(rhs.fontStyles),
-    charMapTablesNames(rhs.charMapTablesNames)
+    charMapTablesNames(rhs.charMapTablesNames), styleDescription(rhs.styleDescription)
 {
     PRINT_DBG("WinHelp font file copy constructor");
 }
@@ -202,6 +634,12 @@ const WinHelpFontFile & WinHelpFontFile::operator=(const WinHelpFontFile &rhs)
         this->fontDescriptors = rhs.fontDescriptors;
         this->fontStyles = rhs.fontStyles;
         this->charMapTablesNames = rhs.charMapTablesNames;
+        this->styleDescription = rhs.styleDescription;
     }
     return *this;
+}
+
+QString WinHelpFontFile::getStyle() const
+{
+    return this->styleDescription;
 }

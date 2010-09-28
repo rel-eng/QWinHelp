@@ -106,7 +106,6 @@ DisplayableTable::DisplayableTable(const void *src,
             PRINT_DBG("        Col width: %d", ci.colWidth);
             this->columns.append(ci);
         }
-        //for(quint8 i = 0; i < this->numberOfColumns; i++)
         while(offset < srcSize)
         {
             try
@@ -2352,6 +2351,54 @@ QString DisplayableTable::getHTML(bool &empty) const
     bool isInParagraph = false;
     bool emptyColumn = true;
     bool isInColumn = false;
+    bool isInFontDef = false;
+    qint16 fontDefNum = 0;
+    bool fontSet = false;
+    QString openingPara = "<p style=\"";
+    if(paraIndex < this->paragraphs.count())
+    {
+        if(this->paragraphs.at(paraIndex).isRightAlignedParagraph)
+        {
+            openingPara += "text-align: right;";
+        }
+        else
+        {
+            if(this->paragraphs.at(paraIndex).isCenterAlignedParagraph)
+            {
+                openingPara += "text-align: center;";
+            }
+            else
+            {
+                openingPara += "text-align: left;";
+            }
+        }
+        if(this->paragraphs.at(paraIndex).isFirstlineIndentPresent)
+        {
+            openingPara += QString("text-indent: %1pt;").arg(this->paragraphs.at(
+                    paraIndex).firstlineIndent/2);
+        }
+        if(this->paragraphs.at(paraIndex).isLeftIndentPresent)
+        {
+            openingPara += QString("margin-left: %1pt;").arg(this->paragraphs.at(
+                    paraIndex).leftIndent/2);
+        }
+        if(this->paragraphs.at(paraIndex).isRightIndentPresent)
+        {
+            openingPara += QString("margin-right: %1pt;").arg(this->paragraphs.at(
+                    paraIndex).rightIndent/2);
+        }
+        if(this->paragraphs.at(paraIndex).isSpacingAbovePresent)
+        {
+            openingPara += QString("margin-top: %1pt;").arg(this->paragraphs.at(
+                    paraIndex).spacingAbove/2);
+        }
+        if(this->paragraphs.at(paraIndex).isSpacingBelowPresent)
+        {
+            openingPara += QString("margin-bottom: %1pt;").arg(
+                2 * this->paragraphs.at(paraIndex).spacingBelow/2);
+        }
+    }
+    openingPara += "\">";
     for(int i = 0; i < this->texts.count(); i++)
     {
         QString str = this->texts.at(i);
@@ -2379,10 +2426,15 @@ QString DisplayableTable::getHTML(bool &empty) const
                     }
                     if(!isInParagraph)
                     {
-                        result += "<p>";
+                        result += openingPara;
                         isInParagraph = true;
                     }
                     emptyColumn = false;
+                    if(!isInFontDef && fontSet)
+                    {
+                        result += QString("<font%1>").arg(fontDefNum);
+                        isInFontDef = true;
+                    }
                     result += "&#x2011;";
                     break;
 
@@ -2394,10 +2446,15 @@ QString DisplayableTable::getHTML(bool &empty) const
                     }
                     if(!isInParagraph)
                     {
-                        result += "<p>";
+                        result += openingPara;
                         isInParagraph = true;
                     }
                     emptyColumn = false;
+                    if(!isInFontDef && fontSet)
+                    {
+                        result += QString("<font%1>").arg(fontDefNum);
+                        isInFontDef = true;
+                    }
                     result += escapedString;
                     result += "<br>";
                     break;
@@ -2410,10 +2467,20 @@ QString DisplayableTable::getHTML(bool &empty) const
                     }
                     if(!isInParagraph)
                     {
-                        result += "<p>";
+                        result += openingPara;
                         isInParagraph = true;
                     }
+                    if(!isInFontDef && fontSet)
+                    {
+                        result += QString("<font%1>").arg(fontDefNum);
+                        isInFontDef = true;
+                    }
                     result += escapedString;
+                    if(isInFontDef)
+                    {
+                        result += QString("</font%1>").arg(fontDefNum);
+                        isInFontDef = false;
+                    }
                     result += "</p>";
                     isInParagraph = false;
                     emptyColumn = false;
@@ -2427,8 +2494,13 @@ QString DisplayableTable::getHTML(bool &empty) const
                     }
                     if(!isInParagraph)
                     {
-                        result += "<p>";
+                        result += openingPara;
                         isInParagraph = true;
+                    }
+                    if(!isInFontDef && fontSet)
+                    {
+                        result += QString("<font%1>").arg(fontDefNum);
+                        isInFontDef = true;
                     }
                     result += escapedString;
                     result += "&nbsp;";
@@ -2446,13 +2518,57 @@ QString DisplayableTable::getHTML(bool &empty) const
                     }
                     if(!isInParagraph)
                     {
-                        result += "<p>";
+                        result += openingPara;
                         isInParagraph = true;
+                    }
+                    if(!isInFontDef && fontSet)
+                    {
+                        result += QString("<font%1>").arg(fontDefNum);
+                        isInFontDef = true;
                     }
                     result += escapedString;
                     result += "&nbsp;&nbsp;&nbsp;&nbsp;";
                     emptyColumn = false;
                     break;
+
+                case FONT_NUMBER:
+                {
+                    if(!isInColumn)
+                    {
+                        result += "<td>";
+                        isInColumn = true;
+                    }
+                    if(!isInParagraph)
+                    {
+                        result += openingPara;
+                        isInParagraph = true;
+                    }
+                    if(!isInFontDef && fontSet)
+                    {
+                        result += QString("<font%1>").arg(fontDefNum);
+                        isInFontDef = true;
+                    }
+                    result += escapedString;
+                    emptyColumn = false;
+                    if(isInFontDef)
+                    {
+                        result += QString("</font%1>").arg(fontDefNum);
+                        isInFontDef = false;
+                    }
+                    if(paraIndex < this->paragraphs.count())
+                    {
+                        if(cmdIndex < this->paragraphs.at(paraIndex).commands.count())
+                        {
+                            qint16 fontNum = this->paragraphs.at(paraIndex).commands.at(cmdIndex).dynamicCast<
+                            FontNumberCommand>()->getFontNumber();
+                            result += QString("<font%1>").arg(fontNum);
+                            isInFontDef = true;
+                            fontDefNum = fontNum;
+                            fontSet = true;
+                        }
+                    }
+                }
+                break;
 
                 default:
                     if(!isInColumn)
@@ -2462,10 +2578,15 @@ QString DisplayableTable::getHTML(bool &empty) const
                     }
                     if(!isInParagraph)
                     {
-                        result += "<p>";
+                        result += openingPara;
                         isInParagraph = true;
                     }
                     emptyColumn = false;
+                    if(!isInFontDef && fontSet)
+                    {
+                        result += QString("<font%1>").arg(fontDefNum);
+                        isInFontDef = true;
+                    }
                     result += escapedString;
                 }
             }
@@ -2483,6 +2604,51 @@ QString DisplayableTable::getHTML(bool &empty) const
                 cmdIndex = 0;
                 paraIndex++;
                 emptyColumn = true;
+                if(paraIndex < this->paragraphs.count())
+                {
+                    openingPara = "<p style=\"";
+                    if(this->paragraphs.at(paraIndex).isRightAlignedParagraph)
+                    {
+                        openingPara += "text-align: right;";
+                    }
+                    else
+                    {
+                        if(this->paragraphs.at(paraIndex).isCenterAlignedParagraph)
+                        {
+                            openingPara += "text-align: center;";
+                        }
+                        else
+                        {
+                            openingPara += "text-align: left;";
+                        }
+                    }
+                    if(this->paragraphs.at(paraIndex).isFirstlineIndentPresent)
+                    {
+                        openingPara += QString("text-indent: %1pt;").arg(this->paragraphs.at(
+                                paraIndex).firstlineIndent/2);
+                    }
+                    if(this->paragraphs.at(paraIndex).isLeftIndentPresent)
+                    {
+                        openingPara += QString("margin-left: %1pt;").arg(this->paragraphs.at(
+                                paraIndex).leftIndent/2);
+                    }
+                    if(this->paragraphs.at(paraIndex).isRightIndentPresent)
+                    {
+                        openingPara += QString("margin-right: %1pt;").arg(this->paragraphs.at(
+                                paraIndex).rightIndent/2);
+                    }
+                    if(this->paragraphs.at(paraIndex).isSpacingAbovePresent)
+                    {
+                        openingPara += QString("margin-top: %1pt;").arg(this->paragraphs.at(
+                                paraIndex).spacingAbove/2);
+                    }
+                    if(this->paragraphs.at(paraIndex).isSpacingBelowPresent)
+                    {
+                        openingPara += QString("margin-bottom: %1pt;").arg(
+                            2 * this->paragraphs.at(paraIndex).spacingBelow/2);
+                    }
+                    openingPara += "\">";
+                }
             }
         }
     }

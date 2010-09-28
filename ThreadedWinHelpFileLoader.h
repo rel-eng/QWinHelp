@@ -42,6 +42,7 @@ public:
     QString getHelpFileTopicCaption(int index);
     QString getHelpFileTopicContents(int index);
     int getTopicIndex(int block, int character);
+    QString getFontStyles();
 
 signals:
     void loadedFile(bool isSuccessfull,
