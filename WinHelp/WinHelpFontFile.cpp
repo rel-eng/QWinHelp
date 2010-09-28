@@ -194,8 +194,11 @@ WinHelpFontFile::WinHelpFontFile(QFile &file, qint64 off,
             {
                 this->styleDescription += "font-weight: normal; ";
             }
-            this->styleDescription += QString("font-size: %1pt; ").arg(
-                    descriptor->getHalfPoints() / 2);
+            if(descriptor->getHalfPoints() != 0)
+            {
+                this->styleDescription += QString("font-size: %1pt; ").arg(
+                        descriptor->getHalfPoints() / 2);
+            }
             switch(descriptor->getFontFamily())
             {
             case OLD_FAM_MODERN:
@@ -282,8 +285,11 @@ WinHelpFontFile::WinHelpFontFile(QFile &file, qint64 off,
             {
                 this->styleDescription += "text-decoration: line-through; ";
             }
-            this->styleDescription += QString("font-size: %1pt; ").arg(
-                    descriptor->getHeight() / 20);
+            if(descriptor->getHeight() != 0)
+            {
+                this->styleDescription += QString("font-size: %1pt; ").arg(
+                        descriptor->getHeight() / 20);
+            }
             this->styleDescription += QString("color: rgb(%1, %2, %3); ").arg(
                     qRed(descriptor->getFgColor())).arg(qGreen(descriptor->
                         getFgColor())).arg(qBlue(descriptor->getFgColor()));
@@ -381,8 +387,11 @@ WinHelpFontFile::WinHelpFontFile(QFile &file, qint64 off,
             {
                 this->styleDescription += "text-decoration: line-through; ";
             }
-            this->styleDescription += QString("font-size: %1pt; ").arg(
-                    descriptor->getHeight() / 20);
+            if(descriptor->getHeight() != 0)
+            {
+                this->styleDescription += QString("font-size: %1pt; ").arg(
+                        descriptor->getHeight() / 20);
+            }
             this->styleDescription += QString("color: rgb(%1, %2, %3); ").arg(
                     qRed(descriptor->getFgColor())).arg(qGreen(descriptor->
                         getFgColor())).arg(qBlue(descriptor->getFgColor()));
@@ -469,8 +478,11 @@ WinHelpFontFile::WinHelpFontFile(QFile &file, qint64 off,
             {
                 this->styleDescription += "font-weight: normal; ";
             }
-            this->styleDescription += QString("font-size: %1pt; ").arg(
-                    descriptor->getHalfPoints() / 2);
+            if(descriptor->getHalfPoints() != 0)
+            {
+                this->styleDescription += QString("font-size: %1pt; ").arg(
+                        descriptor->getHalfPoints() / 2);
+            }
             switch(descriptor->getFontFamily())
             {
             case OLD_FAM_MODERN:
@@ -546,8 +558,11 @@ WinHelpFontFile::WinHelpFontFile(QFile &file, qint64 off,
             {
                 this->styleDescription += "text-decoration: line-through; ";
             }
-            this->styleDescription += QString("font-size: %1pt; ").arg(
-                    descriptor->getHeight() / 20);
+            if(descriptor->getHeight() != 0)
+            {
+                this->styleDescription += QString("font-size: %1pt; ").arg(
+                        descriptor->getHeight() / 20);
+            }
             switch(descriptor->getWeight())
             {
             case NEW_FW_DONTCARE:
@@ -638,8 +653,11 @@ WinHelpFontFile::WinHelpFontFile(QFile &file, qint64 off,
             {
                 this->styleDescription += "text-decoration: line-through; ";
             }
-            this->styleDescription += QString("font-size: %1pt; ").arg(
-                    descriptor->getHeight() / 20);
+            if(descriptor->getHeight() != 0)
+            {
+                this->styleDescription += QString("font-size: %1pt; ").arg(
+                        descriptor->getHeight() / 20);
+            }
             switch(descriptor->getWeight())
             {
             case NEW_FW_DONTCARE:
