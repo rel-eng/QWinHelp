@@ -20,7 +20,7 @@
 #include "ThreadedWinHelpFileLoader.h"
 
 #include <QMutexLocker>
-#include<QDateTime>
+#include <QDateTime>
 
 #include <QtDebug>
 

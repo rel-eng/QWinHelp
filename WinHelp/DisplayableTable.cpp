@@ -2374,28 +2374,31 @@ QString DisplayableTable::getHTML(bool &empty) const
         }
         if(this->paragraphs.at(paraIndex).isFirstlineIndentPresent)
         {
-            openingPara += QString("text-indent: %1pt;").arg(this->paragraphs.at(
-                    paraIndex).firstlineIndent/2);
+            openingPara += QString("text-indent: %1pt;").arg(
+                this->paragraphs.at(
+                    paraIndex).firstlineIndent / 2);
         }
         if(this->paragraphs.at(paraIndex).isLeftIndentPresent)
         {
-            openingPara += QString("margin-left: %1pt;").arg(this->paragraphs.at(
-                    paraIndex).leftIndent/2);
+            openingPara += QString("margin-left: %1pt;").arg(
+                this->paragraphs.at(
+                    paraIndex).leftIndent / 2);
         }
         if(this->paragraphs.at(paraIndex).isRightIndentPresent)
         {
-            openingPara += QString("margin-right: %1pt;").arg(this->paragraphs.at(
-                    paraIndex).rightIndent/2);
+            openingPara += QString("margin-right: %1pt;").arg(
+                this->paragraphs.at(
+                    paraIndex).rightIndent / 2);
         }
         if(this->paragraphs.at(paraIndex).isSpacingAbovePresent)
         {
             openingPara += QString("margin-top: %1pt;").arg(this->paragraphs.at(
-                    paraIndex).spacingAbove/2);
+                    paraIndex).spacingAbove / 2);
         }
         if(this->paragraphs.at(paraIndex).isSpacingBelowPresent)
         {
             openingPara += QString("margin-bottom: %1pt;").arg(
-                2 * this->paragraphs.at(paraIndex).spacingBelow/2);
+                2 * this->paragraphs.at(paraIndex).spacingBelow / 2);
         }
     }
     openingPara += "\">";
@@ -2557,10 +2560,13 @@ QString DisplayableTable::getHTML(bool &empty) const
                     }
                     if(paraIndex < this->paragraphs.count())
                     {
-                        if(cmdIndex < this->paragraphs.at(paraIndex).commands.count())
+                        if(cmdIndex <
+                                this->paragraphs.at(paraIndex).commands.count())
                         {
-                            qint16 fontNum = this->paragraphs.at(paraIndex).commands.at(cmdIndex).dynamicCast<
-                            FontNumberCommand>()->getFontNumber();
+                            qint16 fontNum =
+                                    this->paragraphs.at(paraIndex).commands.at(
+                                    cmdIndex).dynamicCast<
+                                    FontNumberCommand>()->getFontNumber();
                             result += QString("<font%1>").arg(fontNum);
                             isInFontDef = true;
                             fontDefNum = fontNum;
@@ -2613,7 +2619,8 @@ QString DisplayableTable::getHTML(bool &empty) const
                     }
                     else
                     {
-                        if(this->paragraphs.at(paraIndex).isCenterAlignedParagraph)
+                        if(this->paragraphs.at(paraIndex).
+                            isCenterAlignedParagraph)
                         {
                             openingPara += "text-align: center;";
                         }
@@ -2624,28 +2631,32 @@ QString DisplayableTable::getHTML(bool &empty) const
                     }
                     if(this->paragraphs.at(paraIndex).isFirstlineIndentPresent)
                     {
-                        openingPara += QString("text-indent: %1pt;").arg(this->paragraphs.at(
-                                paraIndex).firstlineIndent/2);
+                        openingPara += QString("text-indent: %1pt;").arg(
+                            this->paragraphs.at(
+                                paraIndex).firstlineIndent / 2);
                     }
                     if(this->paragraphs.at(paraIndex).isLeftIndentPresent)
                     {
-                        openingPara += QString("margin-left: %1pt;").arg(this->paragraphs.at(
-                                paraIndex).leftIndent/2);
+                        openingPara += QString("margin-left: %1pt;").arg(
+                            this->paragraphs.at(
+                                paraIndex).leftIndent / 2);
                     }
                     if(this->paragraphs.at(paraIndex).isRightIndentPresent)
                     {
-                        openingPara += QString("margin-right: %1pt;").arg(this->paragraphs.at(
-                                paraIndex).rightIndent/2);
+                        openingPara += QString("margin-right: %1pt;").arg(
+                            this->paragraphs.at(
+                                paraIndex).rightIndent / 2);
                     }
                     if(this->paragraphs.at(paraIndex).isSpacingAbovePresent)
                     {
-                        openingPara += QString("margin-top: %1pt;").arg(this->paragraphs.at(
-                                paraIndex).spacingAbove/2);
+                        openingPara += QString("margin-top: %1pt;").arg(
+                            this->paragraphs.at(
+                                paraIndex).spacingAbove / 2);
                     }
                     if(this->paragraphs.at(paraIndex).isSpacingBelowPresent)
                     {
                         openingPara += QString("margin-bottom: %1pt;").arg(
-                            2 * this->paragraphs.at(paraIndex).spacingBelow/2);
+                            2 * this->paragraphs.at(paraIndex).spacingBelow / 2);
                     }
                     openingPara += "\">";
                 }

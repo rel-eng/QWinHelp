@@ -106,18 +106,24 @@ HelpReply::HelpReply(ThreadedWinHelpFileLoader &winHelpFileLoader,
                     if(url.hasQueryItem(QString("style")))
                     {
                         bool styleNumValid = true;
-                        int styleNum = url.queryItemValue(QString("style")).toInt(&styleNumValid, 10);
+                        int styleNum =
+                            url.queryItemValue(QString("style")).toInt(
+                            &styleNumValid,
+                            10);
                         if(styleNumValid)
                         {
                             if(styleNum == 0)
                             {
-                                QString fontStyles = winHelpFileLoader.getFontStyles();
+                                QString fontStyles =
+                                    winHelpFileLoader.getFontStyles();
                                 if(!fontStyles.isEmpty())
                                 {
                                     this->content = fontStyles.toUtf8();
-                                    setHeader(QNetworkRequest::ContentTypeHeader,
+                                    setHeader(
+                                        QNetworkRequest::ContentTypeHeader,
                                         QVariant("text/css; charset=UTF-8"));
-                                    setHeader(QNetworkRequest::ContentLengthHeader,
+                                    setHeader(
+                                        QNetworkRequest::ContentLengthHeader,
                                         QVariant(this->content.size()));
                                     //setRawHeader(QString("Pragma: ").toAscii(), QString("no-cache").toAscii());
                                     //setRawHeader(QString("Cache-Control: ").toAscii(), QString("no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0").toAscii());

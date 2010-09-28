@@ -2078,28 +2078,28 @@ QString DisplayableTextOld::getHTML(bool &empty) const
     if(this->paragraphs.at(0).isFirstlineIndentPresent)
     {
         openingPara += QString("text-indent: %1pt;").arg(this->paragraphs.at(
-                0).firstlineIndent/2);
+                0).firstlineIndent / 2);
     }
     if(this->paragraphs.at(0).isLeftIndentPresent)
     {
         openingPara += QString("margin-left: %1pt;").arg(this->paragraphs.at(
-                0).leftIndent/2);
+                0).leftIndent / 2);
     }
     if(this->paragraphs.at(0).isRightIndentPresent)
     {
         openingPara += QString("margin-right: %1pt;").arg(this->paragraphs.at(
-                0).rightIndent/2);
+                0).rightIndent / 2);
     }
     if(this->paragraphs.at(0).isSpacingAbovePresent)
     {
         openingPara += QString("margin-top: %1pt;").arg(this->paragraphs.at(
-                0).spacingAbove/2);
+                0).spacingAbove / 2);
     }
     if(this->paragraphs.at(0).isSpacingBelowPresent)
     {
         openingPara +=
             QString("margin-bottom: %1pt;").arg(this->paragraphs.at(
-                0).spacingBelow/2);
+                0).spacingBelow / 2);
     }
     openingPara += "\">";
     for(int i = 0; i < this->texts.count(); i++)
@@ -2281,7 +2281,8 @@ QString DisplayableTextOld::getHTML(bool &empty) const
                 if(topicIndex >= 16)
                 {
                     result += QString(
-                            "<a style=\"border-bottom: 1px solid; color: green\" href=help://help.local/pages?topic=%1>").arg(
+                            "<a style=\"border-bottom: 1px solid; color: green\" href=help://help.local/pages?topic=%1>")
+                            .arg(
                             topicIndex - 16);
                     isInLink = true;
                 }
@@ -2325,7 +2326,8 @@ QString DisplayableTextOld::getHTML(bool &empty) const
                 if(topicIndex >= 16)
                 {
                     result += QString(
-                            "<a style=\"border-bottom: 1px solid; color: green\" href=help://help.local/pages?topic=%1>").arg(
+                            "<a style=\"border-bottom: 1px solid; color: green\" href=help://help.local/pages?topic=%1>")
+                            .arg(
                             topicIndex - 16);
                     isInLink = true;
                 }
@@ -2371,7 +2373,8 @@ QString DisplayableTextOld::getHTML(bool &empty) const
                 if(topicIndex >= 16)
                 {
                     result += QString(
-                            "<a style=\"border-bottom: 1px solid; color: green\" href=help://help.local/pages?topic=%1>").arg(
+                            "<a style=\"border-bottom: 1px solid; color: green\" href=help://help.local/pages?topic=%1>")
+                            .arg(
                             topicIndex - 16);
                     isInLink = true;
                 }
@@ -2456,8 +2459,9 @@ QString DisplayableTextOld::getHTML(bool &empty) const
                     }
                     isInFontDef = false;
                 }
-                qint16 fontNum = this->paragraphs.at(0).commands.at(i).dynamicCast<
-                FontNumberCommand>()->getFontNumber();
+                qint16 fontNum =
+                        this->paragraphs.at(0).commands.at(i).dynamicCast<
+                        FontNumberCommand>()->getFontNumber();
                 if(!isInLink)
                 {
                     result += QString("<font%1>").arg(fontNum);
