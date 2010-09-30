@@ -170,6 +170,34 @@ void WinHelpWindow::tabURLChanged(QWidget *widget)
                                     topicIndex));
                         }
                     }
+                    else
+                    {
+                        if(newUrl.hasQueryItem(QString("hash")))
+                        {
+                            bool hashNumValid = true;
+                            uint hashNum =
+                                newUrl.queryItemValue(QString("hash")).toUInt(
+                                &hashNumValid,
+                                10);
+                            if(hashNumValid)
+                            {
+                                TopicOffset offset =
+                                    winHelpFileLoader.getTopicOffset(
+                                    static_cast<
+                                        quint32>(hashNum));
+                                int topicIndex =
+                                    winHelpFileLoader.getTopicIndex(
+                                    static_cast<int>(
+                                        offset.getTopicBlockNumber()),
+                                    static_cast<int>(offset.getCharacterCount()));
+                                this->ui.pagesTabs->setTabText(
+                                    tabIndex,
+                                    this->winHelpFileLoader.
+                                    getHelpFileTopicCaption(
+                                        topicIndex));
+                            }
+                        }
+                    }
                 }
             }
         }

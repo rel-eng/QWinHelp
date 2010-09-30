@@ -95,7 +95,12 @@ HEADERS += HelpReply.h \
     WinHelp/MVBFontDescriptor.h \
     WinHelp/WinHelpFontFile.h \
     WinHelp/FontDescriptor.h \
-    WinHelp/FontStyle.h
+    WinHelp/FontStyle.h \
+    WinHelp/WinHelpContextFile.h \
+    WinHelp/ContextBTreeIndexEntry.h \
+    WinHelp/ContextBTreeIndexPage.h \
+    WinHelp/ContextBTreeNodeEntry.h \
+    WinHelp/ContextBTreeNodePage.h
 SOURCES += HelpReply.cpp \
     HelpAccessManager.cpp \
     HelpView.cpp \
@@ -167,7 +172,12 @@ SOURCES += HelpReply.cpp \
     WinHelp/MVBFontDescriptor.cpp \
     WinHelp/WinHelpFontFile.cpp \
     WinHelp/FontDescriptor.cpp \
-    WinHelp/FontStyle.cpp
+    WinHelp/FontStyle.cpp \
+    WinHelp/WinHelpContextFile.cpp \
+    WinHelp/ContextBTreeIndexEntry.cpp \
+    WinHelp/ContextBTreeIndexPage.cpp \
+    WinHelp/ContextBTreeNodeEntry.cpp \
+    WinHelp/ContextBTreeNodePage.cpp
 FORMS += winhelpwindow.ui \
     qwinhelp.ui
 RESOURCES +=

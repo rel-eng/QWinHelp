@@ -48,7 +48,7 @@ TopicOffset::TopicOffset(QFile &file, qint64 off)
     quint8 topicOffsetIn2 = readUnsignedByte(file);
     quint8 topicOffsetIn3 = readUnsignedByte(file);
     seekFile(file, off);
-    this->rawValue = readSignedDWord(file);
+    this->rawValue = readUnsignedDWord(file);
     qint64 byte_0 = static_cast<qint64>(topicOffsetIn0);
     qint64 byte_1l = static_cast<qint64>(topicOffsetIn1 & 0x7F);
     qint64 byte_1h = static_cast<qint64>((topicOffsetIn1 & 0x80) >> 7);
@@ -87,7 +87,7 @@ TopicOffset::TopicOffset(const void *src, size_t srcSize)
         getUnsignedByte(reinterpret_cast<const void *>(reinterpret_cast<const
                 quint8
                 *>(src) + static_cast<size_t>(3)));
-    this->rawValue = getSignedDWord(src);
+    this->rawValue = getUnsignedDWord(src);
     qint64 byte_0 = static_cast<qint64>(topicOffsetIn0);
     qint64 byte_1l = static_cast<qint64>(topicOffsetIn1 & 0x7F);
     qint64 byte_1h = static_cast<qint64>((topicOffsetIn1 & 0x80) >> 7);
@@ -135,7 +135,7 @@ qint64 TopicOffset::getCharacterCount() const
     return this->characterCount;
 }
 
-qint32 TopicOffset::getRawValue() const
+quint32 TopicOffset::getRawValue() const
 {
     return this->rawValue;
 }

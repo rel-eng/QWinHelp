@@ -93,11 +93,17 @@ WinHelpFile::WinHelpFile(QString filename) : file(filename)
             this->hallCompression = false;
         }
     }
-    if(directory.isFileExists(QString("|FONT")))
+    if(!directory.isFileExists(QString("|FONT")))
     {
-        this->fontFile =
-            WinHelpFontFile(file, directory.getFileOffset(QString(
-                    "|FONT")), this->system.getCodec());
+        throw std::runtime_error("No |FONT file found");
+    }
+    this->fontFile =
+        WinHelpFontFile(file, directory.getFileOffset(QString(
+                "|FONT")), this->system.getCodec());
+    if(directory.isFileExists(QString("|CONTEXT")))
+    {
+        this->contextFile =
+            WinHelpContextFile(file, directory.getFileOffset(QString("|CONTEXT")));
     }
     if(!directory.isFileExists(QString("|TOPIC")))
     {
@@ -156,4 +162,9 @@ const WinHelpTopicFile & WinHelpFile::getTopicFile() const
 const WinHelpFontFile & WinHelpFile::getFontFile() const
 {
     return this->fontFile;
+}
+
+const WinHelpContextFile & WinHelpFile::getContextFile() const
+{
+    return this->contextFile;
 }

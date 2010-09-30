@@ -125,9 +125,6 @@ HelpReply::HelpReply(ThreadedWinHelpFileLoader &winHelpFileLoader,
                                     setHeader(
                                         QNetworkRequest::ContentLengthHeader,
                                         QVariant(this->content.size()));
-                                    //setRawHeader(QString("Pragma: ").toAscii(), QString("no-cache").toAscii());
-                                    //setRawHeader(QString("Cache-Control: ").toAscii(), QString("no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0").toAscii());
-                                    //setRawHeader(QString("Expires: ").toAscii(), QString("no-cache").toAscii());
                                     setError(QNetworkReply::NoError, "No Error");
                                 }
                                 else
@@ -147,7 +144,52 @@ HelpReply::HelpReply(ThreadedWinHelpFileLoader &winHelpFileLoader,
                     }
                     else
                     {
-                        setError(ContentNotFoundError, "Not found");
+                        if(url.hasQueryItem(QString("hash")))
+                        {
+                            bool hashNumValid = true;
+                            uint hashNum =
+                                url.queryItemValue(QString("hash")).toUInt(
+                                &hashNumValid,
+                                10);
+                            if(hashNumValid)
+                            {
+                                TopicOffset offset =
+                                    winHelpFileLoader.getTopicOffset(
+                                    static_cast<
+                                        quint32>(hashNum));
+                                int topicIndex =
+                                    winHelpFileLoader.getTopicIndex(
+                                    static_cast<int>(
+                                        offset.getTopicBlockNumber()),
+                                    static_cast<int>(offset.getCharacterCount()));
+                                QString topicContents =
+                                    winHelpFileLoader.getHelpFileTopicContents(
+                                    topicIndex);
+                                if(!topicContents.isEmpty())
+                                {
+                                    this->content = topicContents.toUtf8();
+                                    setHeader(
+                                        QNetworkRequest::ContentTypeHeader,
+                                        QVariant("text/html; charset=UTF-8"));
+                                    setHeader(
+                                        QNetworkRequest::ContentLengthHeader,
+                                        QVariant(this->content.size()));
+                                    setError(QNetworkReply::NoError, "No Error");
+                                }
+                                else
+                                {
+                                    setError(ContentNotFoundError, "Not found");
+                                }
+                            }
+                            else
+                            {
+                                setError(ContentNotFoundError, "Not found");
+                            }
+                        }
+                        else
+                        {
+                            setError(ContentNotFoundError, "Not found");
+                        }
                     }
                 }
             }

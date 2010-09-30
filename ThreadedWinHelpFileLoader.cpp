@@ -185,3 +185,15 @@ QString ThreadedWinHelpFileLoader::getFontStyles()
     mutex.unlock();
     return fontStyles;
 }
+
+TopicOffset ThreadedWinHelpFileLoader::getTopicOffset(quint32 hash)
+{
+    mutex.lock();
+    TopicOffset offset;
+    if(helpFile->getContextFile().isHashExists(hash))
+    {
+        offset = helpFile->getContextFile().getOffset(hash);
+    }
+    mutex.unlock();
+    return offset;
+}

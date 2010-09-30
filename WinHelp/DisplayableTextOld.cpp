@@ -2275,7 +2275,7 @@ QString DisplayableTextOld::getHTML(bool &empty) const
                     }
                     isInFontDef = false;
                 }
-                int topicIndex =
+                quint32 topicIndex =
                         this->paragraphs.at(0).commands.at(i).dynamicCast<
                         TopicJumpE1Command>()->getTopicOffset().getRawValue();
                 if(topicIndex >= 16)
@@ -2320,7 +2320,7 @@ QString DisplayableTextOld::getHTML(bool &empty) const
                     }
                     isInFontDef = false;
                 }
-                int topicIndex =
+                quint32 topicIndex =
                         this->paragraphs.at(0).commands.at(i).dynamicCast<
                         TopicJumpE3Command>()->getTopicOffset().getRawValue();
                 if(topicIndex >= 16)
@@ -2366,7 +2366,7 @@ QString DisplayableTextOld::getHTML(bool &empty) const
                     }
                     isInFontDef = false;
                 }
-                int topicIndex =
+                quint32 topicIndex =
                         this->paragraphs.at(0).commands.at(i).dynamicCast<
                         TopicJumpWithoutFontChangeCommand>()->getTopicOffset().
                         getRawValue();

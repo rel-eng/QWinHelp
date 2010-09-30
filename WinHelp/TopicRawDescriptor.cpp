@@ -20,6 +20,7 @@
 #include "TopicRawDescriptor.h"
 
 #include "TopicHeaderOld.h"
+#include "TopicHeaderNew.h"
 
 #include <typeinfo>
 
@@ -133,8 +134,8 @@ void TopicRawDescriptor::transformToHtml(int topicIndex,
     {
         topicContents +=
             "<table width=100%><tr><td><p style=\"text-align: left\">";
-        qint32 prev = header.dynamicCast<TopicHeaderOld>()->getPrevTopicNumber();
-        if(prev != -1)
+        quint32 prev = header.dynamicCast<TopicHeaderOld>()->getPrevTopicNumber();
+        if(prev != 0xFFFFFFFF)
         {
             if(prev >= 16)
             {
@@ -145,8 +146,8 @@ void TopicRawDescriptor::transformToHtml(int topicIndex,
             }
         }
         topicContents += "</p></td><td><p style=\"text-align: right\">";
-        qint32 next = header.dynamicCast<TopicHeaderOld>()->getNextTopicNumber();
-        if(next != -1)
+        quint32 next = header.dynamicCast<TopicHeaderOld>()->getNextTopicNumber();
+        if(next != 0xFFFFFFFF)
         {
             if(next >= 16)
             {
@@ -157,6 +158,32 @@ void TopicRawDescriptor::transformToHtml(int topicIndex,
             }
         }
         topicContents += "</p></td></tr></table>";
+    }
+    else
+    {
+        if(typeid(*(this->header.data())) == typeid(TopicHeaderNew))
+        {
+            topicContents +=
+                "<table width=100%><tr><td><p style=\"text-align: left\">";
+            TopicOffset prev =
+                header.dynamicCast<TopicHeaderNew>()->getBrowseBack();
+            if(prev.getRawValue() != 0xFFFFFFFF)
+            {
+                topicContents += QString(
+                    "<a href=help://help.local/pages?block=%1&character=%2>Previous topic</a>")
+                    .arg(prev.getTopicBlockNumber()).arg(prev.getCharacterCount());
+            }
+            topicContents += "</p></td><td><p style=\"text-align: right\">";
+            TopicOffset next =
+                header.dynamicCast<TopicHeaderNew>()->getBrowseForward();
+            if(next.getRawValue() != 0xFFFFFFFF)
+            {
+                topicContents += QString(
+                    "<a href=help://help.local/pages?block=%1&character=%2>Next topic</a>")
+                    .arg(next.getTopicBlockNumber()).arg(next.getCharacterCount());
+            }
+            topicContents += "</p></td></tr></table>";
+        }
     }
     this->topicContents += "</body></html>";
     this->header.clear();

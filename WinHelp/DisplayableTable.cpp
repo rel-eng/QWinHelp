@@ -2349,6 +2349,7 @@ QString DisplayableTable::getHTML(bool &empty) const
     int paraIndex = 0;
     int cmdIndex = 0;
     bool isInParagraph = false;
+    bool isInLink = false;
     bool emptyColumn = true;
     bool isInColumn = false;
     bool isInFontDef = false;
@@ -2435,7 +2436,14 @@ QString DisplayableTable::getHTML(bool &empty) const
                     emptyColumn = false;
                     if(!isInFontDef && fontSet)
                     {
-                        result += QString("<font%1>").arg(fontDefNum);
+                        if(!isInLink)
+                        {
+                            result += QString("<font%1>").arg(fontDefNum);
+                        }
+                        else
+                        {
+                            result += QString("<linkfont%1>").arg(fontDefNum);
+                        }
                         isInFontDef = true;
                     }
                     result += "&#x2011;";
@@ -2455,7 +2463,14 @@ QString DisplayableTable::getHTML(bool &empty) const
                     emptyColumn = false;
                     if(!isInFontDef && fontSet)
                     {
-                        result += QString("<font%1>").arg(fontDefNum);
+                        if(!isInLink)
+                        {
+                            result += QString("<font%1>").arg(fontDefNum);
+                        }
+                        else
+                        {
+                            result += QString("<linkfont%1>").arg(fontDefNum);
+                        }
                         isInFontDef = true;
                     }
                     result += escapedString;
@@ -2475,13 +2490,27 @@ QString DisplayableTable::getHTML(bool &empty) const
                     }
                     if(!isInFontDef && fontSet)
                     {
-                        result += QString("<font%1>").arg(fontDefNum);
+                        if(!isInLink)
+                        {
+                            result += QString("<font%1>").arg(fontDefNum);
+                        }
+                        else
+                        {
+                            result += QString("<linkfont%1>").arg(fontDefNum);
+                        }
                         isInFontDef = true;
                     }
                     result += escapedString;
                     if(isInFontDef)
                     {
-                        result += QString("</font%1>").arg(fontDefNum);
+                        if(!isInLink)
+                        {
+                            result += QString("</font%1>").arg(fontDefNum);
+                        }
+                        else
+                        {
+                            result += QString("</linkfont%1>").arg(fontDefNum);
+                        }
                         isInFontDef = false;
                     }
                     result += "</p>";
@@ -2502,7 +2531,14 @@ QString DisplayableTable::getHTML(bool &empty) const
                     }
                     if(!isInFontDef && fontSet)
                     {
-                        result += QString("<font%1>").arg(fontDefNum);
+                        if(!isInLink)
+                        {
+                            result += QString("<font%1>").arg(fontDefNum);
+                        }
+                        else
+                        {
+                            result += QString("<linkfont%1>").arg(fontDefNum);
+                        }
                         isInFontDef = true;
                     }
                     result += escapedString;
@@ -2526,11 +2562,236 @@ QString DisplayableTable::getHTML(bool &empty) const
                     }
                     if(!isInFontDef && fontSet)
                     {
-                        result += QString("<font%1>").arg(fontDefNum);
+                        if(!isInLink)
+                        {
+                            result += QString("<font%1>").arg(fontDefNum);
+                        }
+                        else
+                        {
+                            result += QString("<linkfont%1>").arg(fontDefNum);
+                        }
                         isInFontDef = true;
                     }
                     result += escapedString;
                     result += "&nbsp;&nbsp;&nbsp;&nbsp;";
+                    emptyColumn = false;
+                    break;
+
+                case TOPIC_JUMP_E1:
+                {
+                    if(!isInColumn)
+                    {
+                        result += "<td>";
+                        isInColumn = true;
+                    }
+                    if(!isInParagraph)
+                    {
+                        result += openingPara;
+                        isInParagraph = true;
+                    }
+                    if(!isInFontDef && fontSet)
+                    {
+                        if(!isInLink)
+                        {
+                            result += QString("<font%1>").arg(fontDefNum);
+                        }
+                        else
+                        {
+                            result += QString("<linkfont%1>").arg(fontDefNum);
+                        }
+                        isInFontDef = true;
+                    }
+                    result += escapedString;
+                    if(isInFontDef)
+                    {
+                        if(!isInLink)
+                        {
+                            result += QString("</font%1>").arg(fontDefNum);
+                        }
+                        else
+                        {
+                            result += QString("</linkfont%1>").arg(fontDefNum);
+                        }
+                        isInFontDef = false;
+                    }
+                    if(paraIndex < this->paragraphs.count())
+                    {
+                        if(cmdIndex <
+                                this->paragraphs.at(paraIndex).commands.count())
+                        {
+                            quint32 topicHash =
+                                    this->paragraphs.at(paraIndex).commands.at(
+                                    cmdIndex).dynamicCast<
+                                    TopicJumpE1Command>()->getTopicOffset().
+                                    getRawValue();
+                            result += QString(
+                                    "<a style=\"border-bottom: 1px solid; color: green\" href=help://help.local/pages?hash=%1>")
+                                    .arg(topicHash);
+                            isInLink = true;
+                        }
+                    }
+                    if(!isInFontDef && fontSet)
+                    {
+                        if(!isInLink)
+                        {
+                            result += QString("<font%1>").arg(fontDefNum);
+                        }
+                        else
+                        {
+                            result += QString("<linkfont%1>").arg(fontDefNum);
+                        }
+                        isInFontDef = true;
+                    }
+                    emptyColumn = false;
+                }
+                break;
+
+                case TOPIC_JUMP_E3:
+                {
+                    if(!isInColumn)
+                    {
+                        result += "<td>";
+                        isInColumn = true;
+                    }
+                    if(!isInParagraph)
+                    {
+                        result += openingPara;
+                        isInParagraph = true;
+                    }
+                    if(!isInFontDef && fontSet)
+                    {
+                        if(!isInLink)
+                        {
+                            result += QString("<font%1>").arg(fontDefNum);
+                        }
+                        else
+                        {
+                            result += QString("<linkfont%1>").arg(fontDefNum);
+                        }
+                        isInFontDef = true;
+                    }
+                    result += escapedString;
+                    if(isInFontDef)
+                    {
+                        if(!isInLink)
+                        {
+                            result += QString("</font%1>").arg(fontDefNum);
+                        }
+                        else
+                        {
+                            result += QString("</linkfont%1>").arg(fontDefNum);
+                        }
+                        isInFontDef = false;
+                    }
+                    if(paraIndex < this->paragraphs.count())
+                    {
+                        if(cmdIndex <
+                                this->paragraphs.at(paraIndex).commands.count())
+                        {
+                            quint32 topicHash =
+                                    this->paragraphs.at(paraIndex).commands.at(
+                                    cmdIndex).dynamicCast<
+                                    TopicJumpE3Command>()->getTopicOffset().
+                                    getRawValue();
+                            result += QString(
+                                    "<a style=\"border-bottom: 1px solid; color: green\" href=help://help.local/pages?hash=%1>")
+                                    .arg(topicHash);
+                            isInLink = true;
+                        }
+                    }
+                    emptyColumn = false;
+                }
+                break;
+
+                case TOPIC_JUMP_WITHOUT_FONT_CHANGE:
+                {
+                    if(!isInColumn)
+                    {
+                        result += "<td>";
+                        isInColumn = true;
+                    }
+                    if(!isInParagraph)
+                    {
+                        result += openingPara;
+                        isInParagraph = true;
+                    }
+                    if(!isInFontDef && fontSet)
+                    {
+                        if(!isInLink)
+                        {
+                            result += QString("<font%1>").arg(fontDefNum);
+                        }
+                        else
+                        {
+                            result += QString("<linkfont%1>").arg(fontDefNum);
+                        }
+                        isInFontDef = true;
+                    }
+                    result += escapedString;
+                    if(isInFontDef)
+                    {
+                        if(!isInLink)
+                        {
+                            result += QString("</font%1>").arg(fontDefNum);
+                        }
+                        else
+                        {
+                            result += QString("</linkfont%1>").arg(fontDefNum);
+                        }
+                        isInFontDef = false;
+                    }
+                    if(paraIndex < this->paragraphs.count())
+                    {
+                        if(cmdIndex <
+                                this->paragraphs.at(paraIndex).commands.count())
+                        {
+                            quint32 topicHash =
+                                    this->paragraphs.at(paraIndex).commands.at(
+                                    cmdIndex).dynamicCast<
+                                    TopicJumpWithoutFontChangeCommand>()->
+                                    getTopicOffset().
+                                    getRawValue();
+                            result += QString(
+                                    "<a style=\"border-bottom: 1px solid; color: green\" href=help://help.local/pages?hash=%1>")
+                                    .arg(topicHash);
+                            isInLink = true;
+                        }
+                    }
+                    emptyColumn = false;
+                }
+                break;
+
+                case END_OF_HOTSPOT:
+                    if(!isInFontDef && fontSet)
+                    {
+                        if(!isInLink)
+                        {
+                            result += QString("<font%1>").arg(fontDefNum);
+                        }
+                        else
+                        {
+                            result += QString("<linkfont%1>").arg(fontDefNum);
+                        }
+                        isInFontDef = true;
+                    }
+                    result += escapedString;
+                    if(isInFontDef)
+                    {
+                        if(!isInLink)
+                        {
+                            result += QString("</font%1>").arg(fontDefNum);
+                        }
+                        else
+                        {
+                            result += QString("</linkfont%1>").arg(fontDefNum);
+                        }
+                        isInFontDef = false;
+                    }
+                    if(isInLink)
+                    {
+                        result += "</a>";
+                        isInLink = false;
+                    }
                     emptyColumn = false;
                     break;
 
@@ -2548,14 +2809,28 @@ QString DisplayableTable::getHTML(bool &empty) const
                     }
                     if(!isInFontDef && fontSet)
                     {
-                        result += QString("<font%1>").arg(fontDefNum);
+                        if(!isInLink)
+                        {
+                            result += QString("<font%1>").arg(fontDefNum);
+                        }
+                        else
+                        {
+                            result += QString("<linkfont%1>").arg(fontDefNum);
+                        }
                         isInFontDef = true;
                     }
                     result += escapedString;
                     emptyColumn = false;
                     if(isInFontDef)
                     {
-                        result += QString("</font%1>").arg(fontDefNum);
+                        if(!isInLink)
+                        {
+                            result += QString("</font%1>").arg(fontDefNum);
+                        }
+                        else
+                        {
+                            result += QString("</linkfont%1>").arg(fontDefNum);
+                        }
                         isInFontDef = false;
                     }
                     if(paraIndex < this->paragraphs.count())
@@ -2567,7 +2842,14 @@ QString DisplayableTable::getHTML(bool &empty) const
                                     this->paragraphs.at(paraIndex).commands.at(
                                     cmdIndex).dynamicCast<
                                     FontNumberCommand>()->getFontNumber();
-                            result += QString("<font%1>").arg(fontNum);
+                            if(!isInLink)
+                            {
+                                result += QString("<font%1>").arg(fontNum);
+                            }
+                            else
+                            {
+                                result += QString("<linkfont%1>").arg(fontNum);
+                            }
                             isInFontDef = true;
                             fontDefNum = fontNum;
                             fontSet = true;
@@ -2590,7 +2872,14 @@ QString DisplayableTable::getHTML(bool &empty) const
                     emptyColumn = false;
                     if(!isInFontDef && fontSet)
                     {
-                        result += QString("<font%1>").arg(fontDefNum);
+                        if(!isInLink)
+                        {
+                            result += QString("<font%1>").arg(fontDefNum);
+                        }
+                        else
+                        {
+                            result += QString("<linkfont%1>").arg(fontDefNum);
+                        }
                         isInFontDef = true;
                     }
                     result += escapedString;

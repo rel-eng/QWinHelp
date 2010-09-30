@@ -27,6 +27,8 @@
 #include <QMutex>
 #include <QWaitCondition>
 
+#include "WinHelp/TopicOffset.h"
+
 #include "WinHelp/WinHelpFile.h"
 
 class ThreadedWinHelpFileLoader : public QThread
@@ -42,6 +44,7 @@ public:
     QString getHelpFileTopicCaption(int index);
     QString getHelpFileTopicContents(int index);
     int getTopicIndex(int block, int character);
+    TopicOffset getTopicOffset(quint32 hash);
     QString getFontStyles();
 
 signals:
