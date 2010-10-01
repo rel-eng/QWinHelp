@@ -19,6 +19,8 @@
 
 #include "helpbrowsingwidget.h"
 
+#include <QWebHistory>
+
 HelpBrowsingWidget::HelpBrowsingWidget(
     ThreadedWinHelpFileLoader &winHelpFileLoader,
     QWidget *parent) :
@@ -40,11 +42,30 @@ HelpBrowsingWidget::HelpBrowsingWidget(
     this->setLayout(this->verticalLayout);
     connect(this->browser, SIGNAL(urlChanged(const QUrl &)), this,
         SLOT(onURLChanged(const QUrl &)));
+    connect(this->prevButton, SIGNAL(clicked()), this, SLOT(onBackButtonClicked()));
+    connect(this->nextButton, SIGNAL(clicked()), this,
+        SLOT(onForwardButtonClicked()));
 }
 
 void HelpBrowsingWidget::onURLChanged(const QUrl &url)
 {
     emit urlChanged(url);
+}
+
+void HelpBrowsingWidget::onBackButtonClicked()
+{
+    if(this->browser->history()->canGoBack())
+    {
+        this->browser->history()->back();
+    }
+}
+
+void HelpBrowsingWidget::onForwardButtonClicked()
+{
+    if(this->browser->history()->canGoForward())
+    {
+        this->browser->history()->forward();
+    }
 }
 
 void HelpBrowsingWidget::goToURL(const QUrl &url)

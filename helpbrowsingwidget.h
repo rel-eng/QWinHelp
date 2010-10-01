@@ -44,6 +44,8 @@ public slots:
 
 private slots:
     void onURLChanged(const QUrl &url);
+    void onBackButtonClicked();
+    void onForwardButtonClicked();
 
 private:
     HelpView *browser;
