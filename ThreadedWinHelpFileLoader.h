@@ -26,6 +26,7 @@
 #include <QScopedPointer>
 #include <QMutex>
 #include <QWaitCondition>
+#include <QImage>
 
 #include "WinHelp/TopicOffset.h"
 
@@ -46,6 +47,8 @@ public:
     int getTopicIndex(int block, int character);
     TopicOffset getTopicOffset(quint32 hash);
     QString getFontStyles();
+    QImage getImage(int index);
+    QImage getEmbeddedImage(int index);
 
 signals:
     void loadedFile(bool isSuccessfull,

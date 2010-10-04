@@ -22,6 +22,8 @@
 #include "Utils/IOUtils.h"
 #include "Utils/DebugUtils.h"
 
+#include <QBuffer>
+
 #include <stdexcept>
 
 DisplayableTextOld::DisplayableTextOld() : DisplayableText(0x01, 0, 0),
@@ -35,7 +37,9 @@ DisplayableTextOld::DisplayableTextOld(const void *src,
     const void *textSrc,
     size_t textSize,
     QTextCodec *codec,
-    int topicDescriptorNumber, int topicNumber) : DisplayableText(0x01,
+    int topicDescriptorNumber,
+    int topicNumber,
+    QList<WinHelpPicture> &embeddedImages) : DisplayableText(0x01,
     topicDescriptorNumber, topicNumber), paragraphs(), texts()
 {
     if(codec == NULL)
@@ -537,12 +541,19 @@ DisplayableTextOld::DisplayableTextOld(const void *src,
                                             FormattingCommand *>(new
                                             Type86Subtype3Command(
                                                 pictureSize, pictureIsEmbedded,
-                                                0,
+                                                embeddedImages.count(),
                                                 QByteArray(reinterpret_cast<
                                                         const char *>(image.
                                                         data()),
                                                     static_cast<size_t>(
                                                         pictureSize - 2))))));
+                        QByteArray imgBytes(
+                                    reinterpret_cast<const char *>(image.data()));
+                        QBuffer imageBuf(&imgBytes);
+                        imageBuf.open(QIODevice::ReadWrite);
+                        embeddedImages.append(WinHelpPicture(imageBuf,
+                                        Q_INT64_C(0)));
+                        imageBuf.close();
                         PRINT_DBG("        Type 0x86 command subtype 3");
                         PRINT_DBG("        Picture size: %d", pictureSize);
                         PRINT_DBG("        Picture is embedded: %d",
@@ -673,12 +684,19 @@ DisplayableTextOld::DisplayableTextOld(const void *src,
                                             Type86Subtype22Command(
                                                 pictureSize, numberOfHotspots,
                                                 pictureIsEmbedded,
-                                                0,
+                                                embeddedImages.count(),
                                                 QByteArray(reinterpret_cast<
                                                         const char *>(image.
                                                         data()),
                                                     static_cast<size_t>(
                                                         pictureSize - 2))))));
+                        QByteArray imgBytes(
+                                    reinterpret_cast<const char *>(image.data()));
+                        QBuffer imageBuf(&imgBytes);
+                        imageBuf.open(QIODevice::ReadWrite);
+                        embeddedImages.append(WinHelpPicture(imageBuf,
+                                        Q_INT64_C(0)));
+                        imageBuf.close();
                         PRINT_DBG("        Type 0x86 command subtype 22");
                         PRINT_DBG("        Picture size: %d", pictureSize);
                         PRINT_DBG("        Number of hotspots: %d",
@@ -769,12 +787,19 @@ DisplayableTextOld::DisplayableTextOld(const void *src,
                                             FormattingCommand *>(new
                                             Type87Subtype3Command(
                                                 pictureSize, pictureIsEmbedded,
-                                                0,
+                                                embeddedImages.count(),
                                                 QByteArray(reinterpret_cast<
                                                         const char *>(image.
                                                         data()),
                                                     static_cast<size_t>(
                                                         pictureSize - 2))))));
+                        QByteArray imgBytes(
+                                    reinterpret_cast<const char *>(image.data()));
+                        QBuffer imageBuf(&imgBytes);
+                        imageBuf.open(QIODevice::ReadWrite);
+                        embeddedImages.append(WinHelpPicture(imageBuf,
+                                        Q_INT64_C(0)));
+                        imageBuf.close();
                         PRINT_DBG("        Type 0x87 command subtype 3");
                         PRINT_DBG("        Picture size: %d", pictureSize);
                         PRINT_DBG("        Picture is embedded: %d",
@@ -905,12 +930,19 @@ DisplayableTextOld::DisplayableTextOld(const void *src,
                                             Type87Subtype22Command(
                                                 pictureSize, numberOfHotspots,
                                                 pictureIsEmbedded,
-                                                0,
+                                                embeddedImages.count(),
                                                 QByteArray(reinterpret_cast<
                                                         const char *>(image.
                                                         data()),
                                                     static_cast<size_t>(
                                                         pictureSize - 2))))));
+                        QByteArray imgBytes(
+                                    reinterpret_cast<const char *>(image.data()));
+                        QBuffer imageBuf(&imgBytes);
+                        imageBuf.open(QIODevice::ReadWrite);
+                        embeddedImages.append(WinHelpPicture(imageBuf,
+                                        Q_INT64_C(0)));
+                        imageBuf.close();
                         PRINT_DBG("        Type 0x87 command subtype 22");
                         PRINT_DBG("        Picture size: %d", pictureSize);
                         PRINT_DBG("        Number of hotspots: %d",
@@ -1001,12 +1033,19 @@ DisplayableTextOld::DisplayableTextOld(const void *src,
                                             FormattingCommand *>(new
                                             Type88Subtype3Command(
                                                 pictureSize, pictureIsEmbedded,
-                                                0,
+                                                embeddedImages.count(),
                                                 QByteArray(reinterpret_cast<
                                                         const char *>(image.
                                                         data()),
                                                     static_cast<size_t>(
                                                         pictureSize - 2))))));
+                        QByteArray imgBytes(
+                                    reinterpret_cast<const char *>(image.data()));
+                        QBuffer imageBuf(&imgBytes);
+                        imageBuf.open(QIODevice::ReadWrite);
+                        embeddedImages.append(WinHelpPicture(imageBuf,
+                                        Q_INT64_C(0)));
+                        imageBuf.close();
                         PRINT_DBG("        Type 0x88 command subtype 3");
                         PRINT_DBG("        Picture size: %d", pictureSize);
                         PRINT_DBG("        Picture is embedded: %d",
@@ -1137,12 +1176,19 @@ DisplayableTextOld::DisplayableTextOld(const void *src,
                                             Type88Subtype22Command(
                                                 pictureSize, numberOfHotspots,
                                                 pictureIsEmbedded,
-                                                0,
+                                                embeddedImages.count(),
                                                 QByteArray(reinterpret_cast<
                                                         const char *>(image.
                                                         data()),
                                                     static_cast<size_t>(
                                                         pictureSize - 2))))));
+                        QByteArray imgBytes(
+                                    reinterpret_cast<const char *>(image.data()));
+                        QBuffer imageBuf(&imgBytes);
+                        imageBuf.open(QIODevice::ReadWrite);
+                        embeddedImages.append(WinHelpPicture(imageBuf,
+                                        Q_INT64_C(0)));
+                        imageBuf.close();
                         PRINT_DBG("        Type 0x88 command subtype 22");
                         PRINT_DBG("        Picture size: %d", pictureSize);
                         PRINT_DBG("        Number of hotspots: %d",
@@ -2281,7 +2327,7 @@ QString DisplayableTextOld::getHTML(bool &empty) const
                 if(topicIndex >= 16)
                 {
                     result += QString(
-                            "<a style=\"border-bottom: 1px solid; color: green\" href=help://help.local/pages?topic=%1>")
+                            "<a style=\"border-bottom: 1px solid; color: green\" href=\"help://help.local/pages?topic=%1\">")
                             .arg(
                             topicIndex - 16);
                     isInLink = true;
@@ -2326,7 +2372,7 @@ QString DisplayableTextOld::getHTML(bool &empty) const
                 if(topicIndex >= 16)
                 {
                     result += QString(
-                            "<a style=\"border-bottom: 1px solid; color: green\" href=help://help.local/pages?topic=%1>")
+                            "<a style=\"border-bottom: 1px solid; color: green\" href=\"help://help.local/pages?topic=%1\">")
                             .arg(
                             topicIndex - 16);
                     isInLink = true;
@@ -2373,7 +2419,7 @@ QString DisplayableTextOld::getHTML(bool &empty) const
                 if(topicIndex >= 16)
                 {
                     result += QString(
-                            "<a style=\"border-bottom: 1px solid; color: green\" href=help://help.local/pages?topic=%1>")
+                            "<a style=\"border-bottom: 1px solid; color: green\" href=\"help://help.local/pages?topic=%1\">")
                             .arg(
                             topicIndex - 16);
                     isInLink = true;
@@ -2473,6 +2519,249 @@ QString DisplayableTextOld::getHTML(bool &empty) const
                 isInFontDef = true;
                 fontDefNum = fontNum;
                 fontSet = true;
+            }
+            break;
+
+            case TYPE_86:
+            {
+                if(!isInParagraph)
+                {
+                    result += openingPara;
+                    isInParagraph = true;
+                }
+                if(!isInFontDef && fontSet)
+                {
+                    if(!isInLink)
+                    {
+                        result += QString("<font%1>").arg(fontDefNum);
+                    }
+                    else
+                    {
+                        result += QString("<linkfont%1>").arg(fontDefNum);
+                    }
+                    isInFontDef = true;
+                }
+                result += escapedString;
+                switch(this->paragraphs.at(0).commands.at(i).dynamicCast<
+                            Type86Command>()->getDataType())
+                {
+                case EMBEDDED_OBJECT_DATA:
+                    break;
+
+                case EMBEDDED_PICTURE_DATA_TYPE_3:
+                {
+                    if(this->paragraphs.at(0).commands.at(i).dynamicCast<
+                                    Type86Subtype3Command>()->
+                                getPictureIsEmbedded() ==
+                                0)
+                    {
+                        result += QString(
+                                    "<img style=\"border-style: none\" src=\"help://help.local/pages?image=%1\" alt=\"Image\" />")
+                                    .arg(this->paragraphs.at(0).commands.at(
+                                        i).dynamicCast<Type86Subtype3Command>()
+                                    ->
+                                    getPictureNumber());
+                    }
+                    else
+                    {
+                        result += QString(
+                                    "<img style=\"border-style: none\" src=\"help://help.local/pages?embeddedimage=%1\" alt=\"Image\" />")
+                                    .arg(this->paragraphs.at(0).commands.at(
+                                        i).dynamicCast<Type86Subtype3Command>()
+                                    ->
+                                    getPictureNumber());
+                    }
+                }
+                break;
+
+                case EMBEDDED_PICTURE_DATA_TYPE_22:
+                {
+                    if(this->paragraphs.at(0).commands.at(i).dynamicCast<
+                                    Type86Subtype22Command>()->
+                                getPictureIsEmbedded() ==
+                                0)
+                    {
+                        result += QString(
+                                    "<img style=\"border-style: none\" src=\"help://help.local/pages?image=%1\" alt=\"Image\" />")
+                                    .arg(this->paragraphs.at(0).commands.at(
+                                        i).dynamicCast<Type86Subtype22Command>()
+                                    ->
+                                    getPictureNumber());
+                    }
+                    else
+                    {
+                        result += QString(
+                                    "<img style=\"border-style: none\" src=\"help://help.local/pages?embeddedimage=%1\" alt=\"Image\" />")
+                                    .arg(this->paragraphs.at(0).commands.at(
+                                        i).dynamicCast<Type86Subtype22Command>()
+                                    ->
+                                    getPictureNumber());
+                    }
+                }
+                break;
+                }
+            }
+            break;
+
+            case TYPE_87:
+            {
+                if(!isInParagraph)
+                {
+                    result += openingPara;
+                    isInParagraph = true;
+                }
+                if(!isInFontDef && fontSet)
+                {
+                    if(!isInLink)
+                    {
+                        result += QString("<font%1>").arg(fontDefNum);
+                    }
+                    else
+                    {
+                        result += QString("<linkfont%1>").arg(fontDefNum);
+                    }
+                    isInFontDef = true;
+                }
+                result += escapedString;
+                switch(this->paragraphs.at(0).commands.at(i).dynamicCast<
+                            Type87Command>()->getDataType())
+                {
+                case EMBEDDED_OBJECT_DATA:
+                    break;
+
+                case EMBEDDED_PICTURE_DATA_TYPE_3:
+                {
+                    if(this->paragraphs.at(0).commands.at(i).dynamicCast<
+                                    Type87Subtype3Command>()->
+                                getPictureIsEmbedded() ==
+                                0)
+                    {
+                        result += QString(
+                                    "<img style=\"border-style: none\" src=\"help://help.local/pages?image=%1\" alt=\"Image\" />")
+                                    .arg(this->paragraphs.at(0).commands.at(
+                                        i).dynamicCast<Type87Subtype3Command>()
+                                    ->
+                                    getPictureNumber());
+                    }
+                    else
+                    {
+                        result += QString(
+                                    "<img style=\"border-style: none\" src=\"help://help.local/pages?embeddedimage=%1\" alt=\"Image\" />")
+                                    .arg(this->paragraphs.at(0).commands.at(
+                                        i).dynamicCast<Type87Subtype3Command>()
+                                    ->
+                                    getPictureNumber());
+                    }
+                }
+                break;
+
+                case EMBEDDED_PICTURE_DATA_TYPE_22:
+                {
+                    if(this->paragraphs.at(0).commands.at(i).dynamicCast<
+                                    Type87Subtype22Command>()->
+                                getPictureIsEmbedded() ==
+                                0)
+                    {
+                        result += QString(
+                                    "<img style=\"border-style: none\" src=\"help://help.local/pages?image=%1\" alt=\"Image\" />")
+                                    .arg(this->paragraphs.at(0).commands.at(
+                                        i).dynamicCast<Type87Subtype22Command>()
+                                    ->
+                                    getPictureNumber());
+                    }
+                    else
+                    {
+                        result += QString(
+                                    "<img style=\"border-style: none\" src=\"help://help.local/pages?embeddedimage=%1\" alt=\"Image\" />")
+                                    .arg(this->paragraphs.at(0).commands.at(
+                                        i).dynamicCast<Type87Subtype22Command>()
+                                    ->
+                                    getPictureNumber());
+                    }
+                }
+                break;
+                }
+            }
+            break;
+
+            case TYPE_88:
+            {
+                if(!isInParagraph)
+                {
+                    result += openingPara;
+                    isInParagraph = true;
+                }
+                if(!isInFontDef && fontSet)
+                {
+                    if(!isInLink)
+                    {
+                        result += QString("<font%1>").arg(fontDefNum);
+                    }
+                    else
+                    {
+                        result += QString("<linkfont%1>").arg(fontDefNum);
+                    }
+                    isInFontDef = true;
+                }
+                result += escapedString;
+                switch(this->paragraphs.at(0).commands.at(i).dynamicCast<
+                            Type88Command>()->getDataType())
+                {
+                case EMBEDDED_OBJECT_DATA:
+                    break;
+
+                case EMBEDDED_PICTURE_DATA_TYPE_3:
+                {
+                    if(this->paragraphs.at(0).commands.at(i).dynamicCast<
+                                    Type88Subtype3Command>()->
+                                getPictureIsEmbedded() ==
+                                0)
+                    {
+                        result += QString(
+                                    "<img style=\"border-style: none\" src=\"help://help.local/pages?image=%1\" alt=\"Image\" />")
+                                    .arg(this->paragraphs.at(0).commands.at(
+                                        i).dynamicCast<Type88Subtype3Command>()
+                                    ->
+                                    getPictureNumber());
+                    }
+                    else
+                    {
+                        result += QString(
+                                    "<img style=\"border-style: none\" src=\"help://help.local/pages?embeddedimage=%1\" alt=\"Image\" />")
+                                    .arg(this->paragraphs.at(0).commands.at(
+                                        i).dynamicCast<Type88Subtype3Command>()
+                                    ->
+                                    getPictureNumber());
+                    }
+                }
+                break;
+
+                case EMBEDDED_PICTURE_DATA_TYPE_22:
+                {
+                    if(this->paragraphs.at(0).commands.at(i).dynamicCast<
+                                    Type88Subtype22Command>()->
+                                getPictureIsEmbedded() ==
+                                0)
+                    {
+                        result += QString(
+                                    "<img style=\"border-style: none\" src=\"help://help.local/pages?image=%1\" alt=\"Image\" />")
+                                    .arg(this->paragraphs.at(0).commands.at(
+                                        i).dynamicCast<Type88Subtype22Command>()
+                                    ->
+                                    getPictureNumber());
+                    }
+                    else
+                    {
+                        result += QString(
+                                    "<img style=\"border-style: none\" src=\"help://help.local/pages?embeddedimage=%1\" alt=\"Image\" />")
+                                    .arg(this->paragraphs.at(0).commands.at(
+                                        i).dynamicCast<Type88Subtype22Command>()
+                                    ->
+                                    getPictureNumber());
+                    }
+                }
+                break;
+                }
             }
             break;
 

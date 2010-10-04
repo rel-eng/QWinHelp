@@ -24,6 +24,9 @@
 #include <QFile>
 #include <QHash>
 #include <QString>
+#include <QPair>
+#include <QRegExp>
+#include <QList>
 
 class WinHelpInternalDirectory
 {
@@ -39,6 +42,7 @@ public:
     bool isFileExists(QString filename) const;
     qint64 getFileOffset(QString filename) const;
     void addFile(QString filename, qint64 offset);
+    QList<QPair<QString, qint64> > getFilesByRegExp(QRegExp regexp) const;
 };
 
 #endif /* WINHELPINTERNALDIRECTORY_H_ */

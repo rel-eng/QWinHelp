@@ -148,7 +148,11 @@ QString ThreadedWinHelpFileLoader::getHelpFileTitle()
 int ThreadedWinHelpFileLoader::getHelpFileTopicCount()
 {
     mutex.lock();
-    int topicCount = helpFile->getTopicFile().getTopicsCount();
+    int topicCount = 0;
+    if(!helpFile.isNull())
+    {
+        topicCount = helpFile->getTopicFile().getTopicsCount();
+    }
     mutex.unlock();
     return topicCount;
 }
@@ -156,7 +160,11 @@ int ThreadedWinHelpFileLoader::getHelpFileTopicCount()
 QString ThreadedWinHelpFileLoader::getHelpFileTopicCaption(int index)
 {
     mutex.lock();
-    QString topicCaption = helpFile->getTopicFile().getTopicCaption(index);
+    QString topicCaption;
+    if(!helpFile.isNull())
+    {
+        topicCaption = helpFile->getTopicFile().getTopicCaption(index);
+    }
     mutex.unlock();
     return topicCaption;
 }
@@ -164,7 +172,11 @@ QString ThreadedWinHelpFileLoader::getHelpFileTopicCaption(int index)
 QString ThreadedWinHelpFileLoader::getHelpFileTopicContents(int index)
 {
     mutex.lock();
-    QString topicContents = helpFile->getTopicFile().getTopicContents(index);
+    QString topicContents;
+    if(!helpFile.isNull())
+    {
+        topicContents = helpFile->getTopicFile().getTopicContents(index);
+    }
     mutex.unlock();
     return topicContents;
 }
@@ -172,8 +184,12 @@ QString ThreadedWinHelpFileLoader::getHelpFileTopicContents(int index)
 int ThreadedWinHelpFileLoader::getTopicIndex(int block, int character)
 {
     mutex.lock();
-    int topicIndex = helpFile->getTopicFile().getTopicIndexByTopicOffset(block,
-        character);
+    int topicIndex = 0;
+    if(!helpFile.isNull())
+    {
+        topicIndex = helpFile->getTopicFile().getTopicIndexByTopicOffset(block,
+            character);
+    }
     mutex.unlock();
     return topicIndex;
 }
@@ -181,7 +197,11 @@ int ThreadedWinHelpFileLoader::getTopicIndex(int block, int character)
 QString ThreadedWinHelpFileLoader::getFontStyles()
 {
     mutex.lock();
-    QString fontStyles = helpFile->getFontFile().getStyle();
+    QString fontStyles;
+    if(!helpFile.isNull())
+    {
+        fontStyles = helpFile->getFontFile().getStyle();
+    }
     mutex.unlock();
     return fontStyles;
 }
@@ -190,10 +210,37 @@ TopicOffset ThreadedWinHelpFileLoader::getTopicOffset(quint32 hash)
 {
     mutex.lock();
     TopicOffset offset;
-    if(helpFile->getContextFile().isHashExists(hash))
+    if(!helpFile.isNull())
     {
-        offset = helpFile->getContextFile().getOffset(hash);
+        if(helpFile->getContextFile().isHashExists(hash))
+        {
+            offset = helpFile->getContextFile().getOffset(hash);
+        }
     }
     mutex.unlock();
     return offset;
+}
+
+QImage ThreadedWinHelpFileLoader::getImage(int index)
+{
+    mutex.lock();
+    QImage image;
+    if(!helpFile.isNull())
+    {
+        image = helpFile->getPicturesCollection().getPicture(index);
+    }
+    mutex.unlock();
+    return image;
+}
+
+QImage ThreadedWinHelpFileLoader::getEmbeddedImage(int index)
+{
+    mutex.lock();
+    QImage image;
+    if(!helpFile.isNull())
+    {
+        image = helpFile->getEmbeddedPicture(index).getBestPicture();
+    }
+    mutex.unlock();
+    return image;
 }

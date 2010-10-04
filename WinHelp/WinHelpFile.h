@@ -31,6 +31,8 @@
 #include "WinHelpTopicFile.h"
 #include "WinHelpFontFile.h"
 #include "WinHelpContextFile.h"
+#include "WinHelpPicturesCollection.h"
+#include "WinHelpPicture.h"
 
 class WinHelpFile
 {
@@ -43,6 +45,7 @@ private:
     WinHelpTopicFile topicFile;
     WinHelpFontFile fontFile;
     WinHelpContextFile contextFile;
+    WinHelpPicturesCollection picturesCollection;
     WinHelpFile(const WinHelpFile& rhs);
     WinHelpFile & operator=(const WinHelpFile & rhs);
     bool phraseCompressed;
@@ -54,6 +57,8 @@ public:
     const WinHelpTopicFile & getTopicFile() const;
     const WinHelpFontFile & getFontFile() const;
     const WinHelpContextFile & getContextFile() const;
+    const WinHelpPicturesCollection & getPicturesCollection() const;
+    WinHelpPicture getEmbeddedPicture(int index) const;
 };
 
 #endif /* WINHELPFILE_H_ */

@@ -28,6 +28,7 @@
 
 #include "TopicOffset.h"
 #include "FormattingCommands.h"
+#include "WinHelpPicture.h"
 
 #include "DisplayableText.h"
 
@@ -260,7 +261,9 @@ public:
         const void *textSrc,
         size_t textSize,
         QTextCodec *codec,
-        int topicDescriptorNumber, int topicNumber);
+        int topicDescriptorNumber,
+        int topicNumber,
+        QList<WinHelpPicture> &embeddedImages);
     DisplayableTable(const DisplayableTable& rhs);
     virtual ~DisplayableTable();
     DisplayableTable & operator=(const DisplayableTable & rhs);

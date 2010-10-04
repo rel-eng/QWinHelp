@@ -40,7 +40,7 @@
 #include <stdexcept>
 
 WinHelpTopicFile::WinHelpTopicFile() : linkPointers(), linkBlocks(),
-    rawDescriptors()
+    rawDescriptors(), embeddedImages()
 {
     PRINT_DBG("WinHelp Topic file default constructor");
 }
@@ -49,7 +49,8 @@ WinHelpTopicFile::WinHelpTopicFile(QFile &file,
     qint64 off,
     QTextCodec *codec,
     quint16 minor,
-    quint16 flags) : linkPointers(), linkBlocks(), rawDescriptors()
+    quint16 flags) : linkPointers(), linkBlocks(), rawDescriptors(),
+    embeddedImages()
 {
     PRINT_DBG("Loading WinHelp Topic file at %lld", off);
     if (codec == NULL)
@@ -168,7 +169,8 @@ WinHelpTopicFile::WinHelpTopicFile(QFile &file,
     QTextCodec *codec,
     const WinHelpPhraseFile &phrases,
     quint16 minor,
-    quint16 flags) : linkPointers(), linkBlocks(), rawDescriptors()
+    quint16 flags) : linkPointers(), linkBlocks(), rawDescriptors(),
+    embeddedImages()
 {
     PRINT_DBG("Loading WinHelp Topic file at %lld", off);
     if (codec == NULL)
@@ -289,7 +291,8 @@ WinHelpTopicFile::WinHelpTopicFile(QFile &file,
     QTextCodec *codec,
     const WinHelpPhrImageFile &phrases,
     quint16 minor,
-    quint16 flags) : linkPointers(), linkBlocks(), rawDescriptors()
+    quint16 flags) : linkPointers(), linkBlocks(), rawDescriptors(),
+    embeddedImages()
 {
     PRINT_DBG("Loading WinHelp Topic file at %lld", off);
     if (codec == NULL)
@@ -407,7 +410,7 @@ WinHelpTopicFile::WinHelpTopicFile(QFile &file,
 
 WinHelpTopicFile::WinHelpTopicFile(const WinHelpTopicFile& rhs) : linkPointers(
     rhs.linkPointers), linkBlocks(rhs.linkBlocks),
-    rawDescriptors(rhs.rawDescriptors)
+    rawDescriptors(rhs.rawDescriptors), embeddedImages(rhs.embeddedImages)
 {
     PRINT_DBG("WinHelp Topic file copy constructor");
 }
@@ -425,6 +428,7 @@ WinHelpTopicFile & WinHelpTopicFile::operator=(const WinHelpTopicFile & rhs)
         this->linkPointers = rhs.linkPointers;
         this->linkBlocks = rhs.linkBlocks;
         this->rawDescriptors = rhs.rawDescriptors;
+        this->embeddedImages = rhs.embeddedImages;
     }
     return *this;
 }
@@ -1102,7 +1106,8 @@ TopicLinkHeader WinHelpTopicFile::parseTopicLinkUncompressed(QFile &file,
                                 reinterpret_cast<const void *>(data2Buf.data()),
                                 data2Len,
                                 codec,
-                                rawDescriptors.count() - 1, linkPointers.count())));
+                                rawDescriptors.count() - 1,
+                                linkPointers.count(), embeddedImages)));
                     if(rawDescriptors.isEmpty())
                     {
                         throw std::runtime_error("Topic without header");
@@ -1131,7 +1136,8 @@ TopicLinkHeader WinHelpTopicFile::parseTopicLinkUncompressed(QFile &file,
                                 reinterpret_cast<const void *>(data2Buf.data()),
                                 data2Len,
                                 codec,
-                                rawDescriptors.count() - 1, linkPointers.count())));
+                                rawDescriptors.count() - 1,
+                                linkPointers.count(), embeddedImages)));
                 if(rawDescriptors.isEmpty())
                 {
                     throw std::runtime_error("Topic without header");
@@ -1156,7 +1162,8 @@ TopicLinkHeader WinHelpTopicFile::parseTopicLinkUncompressed(QFile &file,
                                 reinterpret_cast<const void *>(data2Buf.data()),
                                 data2Len,
                                 codec,
-                                rawDescriptors.count() - 1, linkPointers.count())));
+                                rawDescriptors.count() - 1,
+                                linkPointers.count(), embeddedImages)));
                 if(rawDescriptors.isEmpty())
                 {
                     throw std::runtime_error("Topic without header");
@@ -1310,7 +1317,8 @@ TopicLinkHeader WinHelpTopicFile::parseTopicLinkCompressedOldPhrases(
                                 reinterpret_cast<const void *>(data2Buf.data()),
                                 data2Len,
                                 codec,
-                                rawDescriptors.count() - 1, linkPointers.count())));
+                                rawDescriptors.count() - 1,
+                                linkPointers.count(), embeddedImages)));
                     if(rawDescriptors.isEmpty())
                     {
                         throw std::runtime_error("Topic without header");
@@ -1339,7 +1347,8 @@ TopicLinkHeader WinHelpTopicFile::parseTopicLinkCompressedOldPhrases(
                                 reinterpret_cast<const void *>(data2Buf.data()),
                                 data2Len,
                                 codec,
-                                rawDescriptors.count() - 1, linkPointers.count())));
+                                rawDescriptors.count() - 1,
+                                linkPointers.count(), embeddedImages)));
                 if(rawDescriptors.isEmpty())
                 {
                     throw std::runtime_error("Topic without header");
@@ -1364,7 +1373,8 @@ TopicLinkHeader WinHelpTopicFile::parseTopicLinkCompressedOldPhrases(
                                 reinterpret_cast<const void *>(data2Buf.data()),
                                 data2Len,
                                 codec,
-                                rawDescriptors.count() - 1, linkPointers.count())));
+                                rawDescriptors.count() - 1,
+                                linkPointers.count(), embeddedImages)));
                 if(rawDescriptors.isEmpty())
                 {
                     throw std::runtime_error("Topic without header");
@@ -1518,7 +1528,8 @@ TopicLinkHeader WinHelpTopicFile::parseTopicLinkCompressedNewPhrases(
                                 reinterpret_cast<const void *>(data2Buf.data()),
                                 data2Len,
                                 codec,
-                                rawDescriptors.count() - 1, linkPointers.count())));
+                                rawDescriptors.count() - 1,
+                                linkPointers.count(), embeddedImages)));
                     if(rawDescriptors.isEmpty())
                     {
                         throw std::runtime_error("Topic without header");
@@ -1547,7 +1558,8 @@ TopicLinkHeader WinHelpTopicFile::parseTopicLinkCompressedNewPhrases(
                                 reinterpret_cast<const void *>(data2Buf.data()),
                                 data2Len,
                                 codec,
-                                rawDescriptors.count() - 1, linkPointers.count())));
+                                rawDescriptors.count() - 1,
+                                linkPointers.count(), embeddedImages)));
                 if(rawDescriptors.isEmpty())
                 {
                     throw std::runtime_error("Topic without header");
@@ -1572,7 +1584,8 @@ TopicLinkHeader WinHelpTopicFile::parseTopicLinkCompressedNewPhrases(
                                 reinterpret_cast<const void *>(data2Buf.data()),
                                 data2Len,
                                 codec,
-                                rawDescriptors.count() - 1, linkPointers.count())));
+                                rawDescriptors.count() - 1,
+                                linkPointers.count(), embeddedImages)));
                 if(rawDescriptors.isEmpty())
                 {
                     throw std::runtime_error("Topic without header");
@@ -1656,4 +1669,9 @@ int WinHelpTopicFile::getTopicIndexByTopicOffset(int block,
         }
     }
     return result;
+}
+
+const QList<WinHelpPicture> &WinHelpTopicFile::getEmbeddedPicturesList() const
+{
+    return embeddedImages;
 }

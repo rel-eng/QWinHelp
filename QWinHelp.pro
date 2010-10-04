@@ -100,7 +100,14 @@ HEADERS += HelpReply.h \
     WinHelp/ContextBTreeIndexEntry.h \
     WinHelp/ContextBTreeIndexPage.h \
     WinHelp/ContextBTreeNodeEntry.h \
-    WinHelp/ContextBTreeNodePage.h
+    WinHelp/ContextBTreeNodePage.h \
+    WinHelp/PictureHeader.h \
+    WinHelp/PictureInfoHeader.h \
+    WinHelp/BitmapHeader.h \
+    WinHelp/MetafileHeader.h \
+    WinHelp/WinHelpPicture.h \
+    WinHelp/WinHelpPictureFile.h \
+    WinHelp/WinHelpPicturesCollection.h
 SOURCES += HelpReply.cpp \
     HelpAccessManager.cpp \
     HelpView.cpp \
@@ -177,7 +184,14 @@ SOURCES += HelpReply.cpp \
     WinHelp/ContextBTreeIndexEntry.cpp \
     WinHelp/ContextBTreeIndexPage.cpp \
     WinHelp/ContextBTreeNodeEntry.cpp \
-    WinHelp/ContextBTreeNodePage.cpp
+    WinHelp/ContextBTreeNodePage.cpp \
+    WinHelp/PictureHeader.cpp \
+    WinHelp/PictureInfoHeader.cpp \
+    WinHelp/BitmapHeader.cpp \
+    WinHelp/MetafileHeader.cpp \
+    WinHelp/WinHelpPicture.cpp \
+    WinHelp/WinHelpPictureFile.cpp \
+    WinHelp/WinHelpPicturesCollection.cpp
 FORMS += winhelpwindow.ui \
     qwinhelp.ui
 RESOURCES +=

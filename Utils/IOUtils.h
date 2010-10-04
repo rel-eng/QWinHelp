@@ -26,19 +26,23 @@
 #include <QTextCodec>
 #include <QColor>
 #include <QList>
+#include <QIODevice>
 
 #include <cstddef>
 
-void seekFile(QFile &file, qint64 offset);
-quint8 readUnsignedByte(QFile &file);
-qint8 readSignedByte(QFile &file);
-quint16 readUnsignedWord(QFile &file);
-qint16 readSignedWord(QFile &file);
-quint32 readUnsignedDWord(QFile &file);
-qint32 readSignedDWord(QFile &file);
-quint64 readUnsignedQWord(QFile &file);
-qint64 readSignedQWord(QFile &file);
-void fillBuffer(QFile &file, qint64 length, void *buffer, size_t bufferSize);
+void seekFile(QIODevice &device, qint64 offset);
+quint8 readUnsignedByte(QIODevice &device);
+qint8 readSignedByte(QIODevice &device);
+quint16 readUnsignedWord(QIODevice &device);
+qint16 readSignedWord(QIODevice &device);
+quint32 readUnsignedDWord(QIODevice &device);
+qint32 readSignedDWord(QIODevice &device);
+quint64 readUnsignedQWord(QIODevice &device);
+qint64 readSignedQWord(QIODevice &device);
+void fillBuffer(QIODevice &device,
+    qint64 length,
+    void *buffer,
+    size_t bufferSize);
 QString readFixedLengthString(QFile &file, uint length, QTextCodec *codec);
 QString readFixedLengthStringFromBuffer(const void *buffer,
     size_t bufferSize,
@@ -46,11 +50,16 @@ QString readFixedLengthStringFromBuffer(const void *buffer,
     uint length,
     QTextCodec *codec);
 QString readNullTerminatedString(QFile &file, QTextCodec *codec, qint64 &length);
-QRgb readRGBDword(QFile &file);
-QRgb readRGBADword(QFile &file);
-QRgb readBGRDword(QFile &file);
-QRgb readBGRADword(QFile &file);
-QRgb readRGBBytes(QFile &file);
+QRgb readRGBDword(QIODevice &device);
+QRgb readRGBADword(QIODevice &device);
+QRgb readBGRDword(QIODevice &device);
+QRgb readBGRADword(QIODevice &device);
+QRgb readRGBBytes(QIODevice &device);
+QRgb getRGBDword(const void *src);
+QRgb getRGBADword(const void *src);
+QRgb getBGRDword(const void *src);
+QRgb getBGRADword(const void *src);
+QRgb getRGBBytes(const void *src);
 quint8 getUnsignedByte(const void *src);
 qint8 getSignedByte(const void *src);
 quint16 getUnsignedWord(const void *src);
@@ -90,5 +99,9 @@ qint32 getCompressedSignedDWord(const void *src,
     size_t offset,
     size_t srcSize,
     size_t &bytesRead);
+quint16 readCompressedUnsignedWord(QIODevice &device);
+qint16 readCompressedSignedWord(QIODevice &device);
+quint32 readCompressedUnsignedDWord(QIODevice &device);
+qint32 readCompressedSignedDWord(QIODevice &device);
 
 #endif /* IOUTILS_H_ */

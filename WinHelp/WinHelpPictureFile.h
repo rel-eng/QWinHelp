@@ -1,4 +1,4 @@
-/* Prototypes of compression functions.
+/* WinHelp picture file definition.
 
    Copyright (C) 2010 rel-eng
 
@@ -17,27 +17,25 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-#ifndef COMPRESSIONUTILS_H_
-#define COMPRESSIONUTILS_H_
+#ifndef WINHELPPICTUREFILE_H
+#define WINHELPPICTUREFILE_H
 
 #include <QtGlobal>
 #include <QFile>
-#include <cstddef>
 
-size_t unpackLZ77(QIODevice &device,
-    qint64 off,
-    qint64 inputSize,
-    void *outputBuffer,
-    size_t outputBufferSize);
+#include "WinHelpPicture.h"
 
-size_t unpackLZ77UnknownOutputSize(QIODevice &device,
-    qint64 off,
-    size_t inputSize,
-    QIODevice &outputDevice);
+class WinHelpPictureFile
+{
+private:
+    WinHelpPicture picture;
+public:
+    WinHelpPictureFile();
+    WinHelpPictureFile(QFile &file, qint64 off);
+    WinHelpPictureFile(WinHelpPictureFile &rhs);
+    virtual ~WinHelpPictureFile();
+    WinHelpPictureFile &operator=(const WinHelpPictureFile &rhs);
+    const WinHelpPicture &getPicture() const;
+};
 
-size_t unpackRLEUnknownOutputSize(QIODevice &device,
-    qint64 off,
-    size_t inputSize,
-    QIODevice &outputDevice);
-
-#endif /* COMPRESSIONUTILS_H_ */
+#endif // WINHELPPICTUREFILE_H

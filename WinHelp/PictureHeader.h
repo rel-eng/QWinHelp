@@ -1,4 +1,4 @@
-/* Prototypes of compression functions.
+/* Picture header definition.
 
    Copyright (C) 2010 rel-eng
 
@@ -17,27 +17,37 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-#ifndef COMPRESSIONUTILS_H_
-#define COMPRESSIONUTILS_H_
+#ifndef PICTUREHEADER_H
+#define PICTUREHEADER_H
 
 #include <QtGlobal>
-#include <QFile>
+#include <QIODevice>
+#include <QList>
+
 #include <cstddef>
 
-size_t unpackLZ77(QIODevice &device,
-    qint64 off,
-    qint64 inputSize,
-    void *outputBuffer,
-    size_t outputBufferSize);
+enum PictureMagic : quint16
+{
+    SHG_PICTURE = 0x506C,
+    MRB_PICTURE = 0x706C
+};
 
-size_t unpackLZ77UnknownOutputSize(QIODevice &device,
-    qint64 off,
-    size_t inputSize,
-    QIODevice &outputDevice);
+class PictureHeader
+{
+private:
+    quint16 magic;
+    QList<quint32> pictureOffsets;
+    qint64 sz;
+public:
+    PictureHeader();
+    PictureHeader(QIODevice& device, qint64 off);
+    PictureHeader(const PictureHeader &rhs);
+    virtual ~PictureHeader();
+    PictureHeader &operator=(const PictureHeader &rhs);
+    quint16 getMagic() const;
+    int getNumberOfPictures() const;
+    quint32 getPictureOffset(int index);
+    qint64 size() const;
+};
 
-size_t unpackRLEUnknownOutputSize(QIODevice &device,
-    qint64 off,
-    size_t inputSize,
-    QIODevice &outputDevice);
-
-#endif /* COMPRESSIONUTILS_H_ */
+#endif // PICTUREHEADER_H

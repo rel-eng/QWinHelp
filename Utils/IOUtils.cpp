@@ -26,18 +26,18 @@
 
 #include <stdexcept>
 
-void seekFile(QFile &file, qint64 offset)
+void seekFile(QIODevice &device, qint64 offset)
 {
-    if (!file.seek(offset))
+    if (!device.seek(offset))
     {
         throw std::runtime_error("Unable to seek file");
     }
 }
 
-quint8 readUnsignedByte(QFile &file)
+quint8 readUnsignedByte(QIODevice &device)
 {
     quint8 result = 0;
-    if (file.read(reinterpret_cast<char *> (&result),
+    if (device.read(reinterpret_cast<char *> (&result),
             Q_INT64_C(1)) != Q_INT64_C(1))
     {
         throw std::runtime_error("Unable to read file");
@@ -45,10 +45,10 @@ quint8 readUnsignedByte(QFile &file)
     return result;
 }
 
-qint8 readSignedByte(QFile &file)
+qint8 readSignedByte(QIODevice &device)
 {
     qint8 result = 0;
-    if (file.read(reinterpret_cast<char *> (&result),
+    if (device.read(reinterpret_cast<char *> (&result),
             Q_INT64_C(1)) != Q_INT64_C(1))
     {
         throw std::runtime_error("Unable to read file");
@@ -56,10 +56,10 @@ qint8 readSignedByte(QFile &file)
     return result;
 }
 
-quint16 readUnsignedWord(QFile &file)
+quint16 readUnsignedWord(QIODevice &device)
 {
     quint16 result = 0;
-    if (file.read(reinterpret_cast<char *> (&result),
+    if (device.read(reinterpret_cast<char *> (&result),
             Q_INT64_C(2)) != Q_INT64_C(2))
     {
         throw std::runtime_error("Unable to read file");
@@ -68,10 +68,10 @@ quint16 readUnsignedWord(QFile &file)
     return result;
 }
 
-qint16 readSignedWord(QFile &file)
+qint16 readSignedWord(QIODevice &device)
 {
     qint16 result = 0;
-    if (file.read(reinterpret_cast<char *> (&result),
+    if (device.read(reinterpret_cast<char *> (&result),
             Q_INT64_C(2)) != Q_INT64_C(2))
     {
         throw std::runtime_error("Unable to read file");
@@ -80,10 +80,10 @@ qint16 readSignedWord(QFile &file)
     return result;
 }
 
-quint32 readUnsignedDWord(QFile &file)
+quint32 readUnsignedDWord(QIODevice &device)
 {
     quint32 result = 0;
-    if (file.read(reinterpret_cast<char *> (&result),
+    if (device.read(reinterpret_cast<char *> (&result),
             Q_INT64_C(4)) != Q_INT64_C(4))
     {
         throw std::runtime_error("Unable to read file");
@@ -92,10 +92,10 @@ quint32 readUnsignedDWord(QFile &file)
     return result;
 }
 
-qint32 readSignedDWord(QFile &file)
+qint32 readSignedDWord(QIODevice &device)
 {
     qint32 result = 0;
-    if (file.read(reinterpret_cast<char *> (&result),
+    if (device.read(reinterpret_cast<char *> (&result),
             Q_INT64_C(4)) != Q_INT64_C(4))
     {
         throw std::runtime_error("Unable to read file");
@@ -104,10 +104,10 @@ qint32 readSignedDWord(QFile &file)
     return result;
 }
 
-quint64 readUnsignedQWord(QFile &file)
+quint64 readUnsignedQWord(QIODevice &device)
 {
     quint64 result = 0;
-    if (file.read(reinterpret_cast<char *> (&result),
+    if (device.read(reinterpret_cast<char *> (&result),
             Q_INT64_C(8)) != Q_INT64_C(8))
     {
         throw std::runtime_error("Unable to read file");
@@ -116,10 +116,10 @@ quint64 readUnsignedQWord(QFile &file)
     return result;
 }
 
-qint64 readSignedQWord(QFile &file)
+qint64 readSignedQWord(QIODevice &device)
 {
     qint64 result = 0;
-    if (file.read(reinterpret_cast<char *> (&result),
+    if (device.read(reinterpret_cast<char *> (&result),
             Q_INT64_C(8)) != Q_INT64_C(8))
     {
         throw std::runtime_error("Unable to read file");
@@ -128,7 +128,10 @@ qint64 readSignedQWord(QFile &file)
     return result;
 }
 
-void fillBuffer(QFile &file, qint64 length, void *buffer, size_t bufferSize)
+void fillBuffer(QIODevice &device,
+    qint64 length,
+    void *buffer,
+    size_t bufferSize)
 {
     if(length < Q_INT64_C(0))
     {
@@ -138,7 +141,8 @@ void fillBuffer(QFile &file, qint64 length, void *buffer, size_t bufferSize)
     {
         throw std::runtime_error("Buffer is too small");
     }
-    if (file.read(reinterpret_cast<char *> (buffer), length) != length)
+    qint64 bytesRead = device.read(reinterpret_cast<char *> (buffer), length);
+    if (bytesRead != length)
     {
         throw std::runtime_error("Unable to read file");
     }
@@ -256,155 +260,146 @@ QString readNullTerminatedString(QFile &file, QTextCodec *codec, qint64 &length)
         static_cast<int> (stringLength - Q_INT64_C(1)));
 }
 
-QRgb readRGBDword(QFile &file)
+QRgb readRGBDword(QIODevice &device)
 {
-    quint8 redIn = 0;
-    if (file.read(reinterpret_cast<char *> (&redIn),
-            Q_INT64_C(1)) != Q_INT64_C(1))
+    quint8 data[] = {
+        0, 0, 0, 0
+    };
+    if (device.read(reinterpret_cast<char *> (&data),
+            Q_INT64_C(4)) != Q_INT64_C(4))
     {
         throw std::runtime_error("Unable to read file");
     }
-    quint8 greenIn = 0;
-    if (file.read(reinterpret_cast<char *> (&greenIn),
-            Q_INT64_C(1)) != Q_INT64_C(1))
-    {
-        throw std::runtime_error("Unable to read file");
-    }
-    quint8 blueIn = 0;
-    if (file.read(reinterpret_cast<char *> (&blueIn),
-            Q_INT64_C(1)) != Q_INT64_C(1))
-    {
-        throw std::runtime_error("Unable to read file");
-    }
-    quint8 alphaIn = 0;
-    if (file.read(reinterpret_cast<char *> (&alphaIn),
-            Q_INT64_C(1)) != Q_INT64_C(1))
-    {
-        throw std::runtime_error("Unable to read file");
-    }
+    quint8 redIn = data[0];
+    quint8 greenIn = data[1];
+    quint8 blueIn = data[2];
     return qRgb(static_cast<int>(redIn),
         static_cast<int>(greenIn),
         static_cast<int>(blueIn));
 }
 
-QRgb readRGBADword(QFile &file)
+QRgb readRGBADword(QIODevice &device)
 {
-    quint8 redIn = 0;
-    if (file.read(reinterpret_cast<char *> (&redIn),
-            Q_INT64_C(1)) != Q_INT64_C(1))
+    quint8 data[] = {
+        0, 0, 0, 0
+    };
+    if (device.read(reinterpret_cast<char *> (&data),
+            Q_INT64_C(4)) != Q_INT64_C(4))
     {
         throw std::runtime_error("Unable to read file");
     }
-    quint8 greenIn = 0;
-    if (file.read(reinterpret_cast<char *> (&greenIn),
-            Q_INT64_C(1)) != Q_INT64_C(1))
-    {
-        throw std::runtime_error("Unable to read file");
-    }
-    quint8 blueIn = 0;
-    if (file.read(reinterpret_cast<char *> (&blueIn),
-            Q_INT64_C(1)) != Q_INT64_C(1))
-    {
-        throw std::runtime_error("Unable to read file");
-    }
-    quint8 alphaIn = 0;
-    if (file.read(reinterpret_cast<char *> (&alphaIn),
-            Q_INT64_C(1)) != Q_INT64_C(1))
-    {
-        throw std::runtime_error("Unable to read file");
-    }
+    quint8 redIn = data[0];
+    quint8 greenIn = data[1];
+    quint8 blueIn = data[2];
+    quint8 alphaIn = data[3];
     return qRgba(static_cast<int>(redIn),
         static_cast<int>(greenIn),
         static_cast<int>(blueIn),
         static_cast<int>(alphaIn));
 }
 
-QRgb readBGRDword(QFile &file)
+QRgb readBGRDword(QIODevice &device)
 {
-    quint8 blueIn = 0;
-    if (file.read(reinterpret_cast<char *> (&blueIn),
-            Q_INT64_C(1)) != Q_INT64_C(1))
+    quint8 data[] = {
+        0, 0, 0, 0
+    };
+    if (device.read(reinterpret_cast<char *> (&data),
+            Q_INT64_C(4)) != Q_INT64_C(4))
     {
         throw std::runtime_error("Unable to read file");
     }
-    quint8 greenIn = 0;
-    if (file.read(reinterpret_cast<char *> (&greenIn),
-            Q_INT64_C(1)) != Q_INT64_C(1))
-    {
-        throw std::runtime_error("Unable to read file");
-    }
-    quint8 redIn = 0;
-    if (file.read(reinterpret_cast<char *> (&redIn),
-            Q_INT64_C(1)) != Q_INT64_C(1))
-    {
-        throw std::runtime_error("Unable to read file");
-    }
-    quint8 alphaIn = 0;
-    if (file.read(reinterpret_cast<char *> (&alphaIn),
-            Q_INT64_C(1)) != Q_INT64_C(1))
-    {
-        throw std::runtime_error("Unable to read file");
-    }
+    quint8 blueIn = data[0];
+    quint8 greenIn = data[1];
+    quint8 redIn = data[2];
     return qRgb(static_cast<int>(redIn),
         static_cast<int>(greenIn),
         static_cast<int>(blueIn));
 }
 
-QRgb readBGRADword(QFile &file)
+QRgb readBGRADword(QIODevice &device)
 {
-    quint8 blueIn = 0;
-    if (file.read(reinterpret_cast<char *> (&blueIn),
-            Q_INT64_C(1)) != Q_INT64_C(1))
+    quint8 data[] = {
+        0, 0, 0, 0
+    };
+    if (device.read(reinterpret_cast<char *> (&data),
+            Q_INT64_C(4)) != Q_INT64_C(4))
     {
         throw std::runtime_error("Unable to read file");
     }
-    quint8 greenIn = 0;
-    if (file.read(reinterpret_cast<char *> (&greenIn),
-            Q_INT64_C(1)) != Q_INT64_C(1))
-    {
-        throw std::runtime_error("Unable to read file");
-    }
-    quint8 redIn = 0;
-    if (file.read(reinterpret_cast<char *> (&redIn),
-            Q_INT64_C(1)) != Q_INT64_C(1))
-    {
-        throw std::runtime_error("Unable to read file");
-    }
-    quint8 alphaIn = 0;
-    if (file.read(reinterpret_cast<char *> (&alphaIn),
-            Q_INT64_C(1)) != Q_INT64_C(1))
-    {
-        throw std::runtime_error("Unable to read file");
-    }
+    quint8 blueIn = data[0];
+    quint8 greenIn = data[1];
+    quint8 redIn = data[2];
+    quint8 alphaIn = data[3];
     return qRgba(static_cast<int>(redIn),
         static_cast<int>(greenIn),
         static_cast<int>(blueIn),
         static_cast<int>(alphaIn));
 }
 
-QRgb readRGBBytes(QFile &file)
+QRgb readRGBBytes(QIODevice &device)
 {
-    quint8 redIn = 0;
-    if (file.read(reinterpret_cast<char *> (&redIn),
-            Q_INT64_C(1)) != Q_INT64_C(1))
+    quint8 data[] = {
+        0, 0, 0
+    };
+    if (device.read(reinterpret_cast<char *> (&data),
+            Q_INT64_C(3)) != Q_INT64_C(3))
     {
         throw std::runtime_error("Unable to read file");
     }
-    quint8 greenIn = 0;
-    if (file.read(reinterpret_cast<char *> (&greenIn),
-            Q_INT64_C(1)) != Q_INT64_C(1))
-    {
-        throw std::runtime_error("Unable to read file");
-    }
-    quint8 blueIn = 0;
-    if (file.read(reinterpret_cast<char *> (&blueIn),
-            Q_INT64_C(1)) != Q_INT64_C(1))
-    {
-        throw std::runtime_error("Unable to read file");
-    }
+    quint8 redIn = data[0];
+    quint8 greenIn = data[1];
+    quint8 blueIn = data[2];
     return qRgb(static_cast<int>(redIn),
         static_cast<int>(greenIn),
         static_cast<int>(blueIn));
+}
+
+QRgb getRGBDword(const void *src)
+{
+    const quint8 *bytes = reinterpret_cast<const quint8 *>(src);
+    quint8 redIn = bytes[0];
+    quint8 greenIn = bytes[1];
+    quint8 blueIn = bytes[2];
+    return qRgb(static_cast<int>(redIn),
+        static_cast<int>(greenIn),
+        static_cast<int>(blueIn));
+}
+
+QRgb getRGBADword(const void *src)
+{
+    const quint8 *bytes = reinterpret_cast<const quint8 *>(src);
+    quint8 redIn = bytes[0];
+    quint8 greenIn = bytes[1];
+    quint8 blueIn = bytes[2];
+    quint8 alphaIn = bytes[3];
+    return qRgba(static_cast<int>(redIn),
+        static_cast<int>(greenIn),
+        static_cast<int>(blueIn),
+        static_cast<int>(alphaIn));
+}
+
+QRgb getBGRDword(const void *src)
+{
+    const quint8 *bytes = reinterpret_cast<const quint8 *>(src);
+    quint8 blueIn = bytes[0];
+    quint8 greenIn = bytes[1];
+    quint8 redIn = bytes[2];
+    return qRgb(static_cast<int>(redIn),
+        static_cast<int>(greenIn),
+        static_cast<int>(blueIn));
+}
+
+QRgb getBGRADword(const void *src)
+{
+    const quint8 *bytes = reinterpret_cast<const quint8 *>(src);
+    quint8 blueIn = bytes[0];
+    quint8 greenIn = bytes[1];
+    quint8 redIn = bytes[2];
+    quint8 alphaIn = bytes[3];
+    return qRgba(static_cast<int>(redIn),
+        static_cast<int>(greenIn),
+        static_cast<int>(blueIn),
+        static_cast<int>(alphaIn));
 }
 
 quint8 getUnsignedByte(const void *src)
@@ -719,5 +714,70 @@ qint32 getCompressedSignedDWord(const void *src,
                         reinterpret_cast<const void *>(reinterpret_cast<const
                                 quint8 *>(src) +
                             offset))) - Q_INT64_C(0x8000)) / Q_INT64_C(2));
+    }
+}
+
+quint16 readCompressedUnsignedWord(QIODevice &device)
+{
+    qint64 pos = device.pos();
+    quint8 lowByte = readUnsignedByte(device);
+    if((lowByte & 1) != 0)
+    {
+        seekFile(device, pos);
+        return readUnsignedWord(device) / 2;
+    }
+    else
+    {
+        return static_cast<quint16>(lowByte) / 2;
+    }
+}
+
+qint16 readCompressedSignedWord(QIODevice &device)
+{
+    qint64 pos = device.pos();
+    quint8 lowByte = readUnsignedByte(device);
+    if((lowByte & 1) != 0)
+    {
+        seekFile(device, pos);
+        return static_cast<qint16>((static_cast<qint32>(readUnsignedWord(device))
+                - 0x8000) / 2);
+    }
+    else
+    {
+        return static_cast<qint16>((static_cast<qint32>(lowByte) - 0x80) / 2);
+    }
+}
+
+quint32 readCompressedUnsignedDWord(QIODevice &device)
+{
+    qint64 pos = device.pos();
+    quint8 lowByte = readUnsignedByte(device);
+    if((lowByte & 1) != 0)
+    {
+        seekFile(device, pos);
+        return readUnsignedDWord(device) / 2;
+    }
+    else
+    {
+        seekFile(device, pos);
+        return static_cast<quint32>(readUnsignedWord(device)) / 2;
+    }
+}
+
+qint32 readCompressedSignedDWord(QIODevice &device)
+{
+    qint64 pos = device.pos();
+    quint8 lowByte = readUnsignedByte(device);
+    if((lowByte & 1) != 0)
+    {
+        seekFile(device, pos);
+        return static_cast<qint32>((static_cast<qint64>(readUnsignedDWord(
+                        device)) - Q_INT64_C(0x80000000)) / Q_INT64_C(2));
+    }
+    else
+    {
+        seekFile(device, pos);
+        return static_cast<qint32>((static_cast<qint64>(readUnsignedWord(device))
+                - Q_INT64_C(0x8000)) / Q_INT64_C(2));
     }
 }

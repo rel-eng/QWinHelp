@@ -27,6 +27,8 @@
 #include "BTreeIndexPage.h"
 #include "BTreeNodePage.h"
 
+#include <QHashIterator>
+
 #include <stdexcept>
 
 WinHelpInternalDirectory::WinHelpInternalDirectory() :
@@ -133,4 +135,20 @@ void WinHelpInternalDirectory::addFile(QString filename, qint64 offset)
         throw std::invalid_argument("Directory already contains this file");
     }
     this->directory.insert(filename, offset);
+}
+
+QList<QPair<QString, qint64> > WinHelpInternalDirectory::getFilesByRegExp(
+    QRegExp regexp) const
+{
+    QList<QPair<QString, qint64> > result;
+    QHashIterator<QString, qint64> i(this->directory);
+    while (i.hasNext())
+    {
+        i.next();
+        if(i.key().contains(regexp))
+        {
+            result.append(QPair<QString, qint64>(i.key(), i.value()));
+        }
+    }
+    return result;
 }

@@ -20,6 +20,9 @@
 #include "HelpReply.h"
 
 #include <QTimer>
+#include <QImage>
+#include <QBuffer>
+#include <QByteArray>
 
 HelpReply::HelpReply(ThreadedWinHelpFileLoader &winHelpFileLoader,
     const QUrl &url,
@@ -188,7 +191,76 @@ HelpReply::HelpReply(ThreadedWinHelpFileLoader &winHelpFileLoader,
                         }
                         else
                         {
-                            setError(ContentNotFoundError, "Not found");
+                            if(url.hasQueryItem(QString("image")))
+                            {
+                                bool imageNumValid = true;
+                                uint imageNum =
+                                    url.queryItemValue(QString("image")).toUInt(
+                                    &imageNumValid,
+                                    10);
+                                if(imageNumValid)
+                                {
+                                    QImage image = winHelpFileLoader.getImage(
+                                        imageNum);
+                                    QByteArray ba;
+                                    QBuffer buffer(&ba);
+                                    buffer.open(QIODevice::WriteOnly);
+                                    image.save(&buffer, "PNG");
+                                    this->content = ba;
+                                    setHeader(
+                                        QNetworkRequest::ContentTypeHeader,
+                                        QVariant("image/png"));
+                                    setHeader(
+                                        QNetworkRequest::ContentLengthHeader,
+                                        QVariant(this->content.size()));
+                                    setError(QNetworkReply::NoError, "No Error");
+                                }
+                                else
+                                {
+                                    setError(ContentNotFoundError, "Not found");
+                                }
+                            }
+                            else
+                            {
+                                if(url.hasQueryItem(QString("embeddedimage")))
+                                {
+                                    bool imageNumValid = true;
+                                    uint imageNum =
+                                        url.queryItemValue(QString(
+                                            "embeddedimage")).toUInt(
+                                        &imageNumValid,
+                                        10);
+                                    if(imageNumValid)
+                                    {
+                                        QImage image =
+                                            winHelpFileLoader.getEmbeddedImage(
+                                            imageNum);
+                                        QByteArray ba;
+                                        QBuffer buffer(&ba);
+                                        buffer.open(QIODevice::WriteOnly);
+                                        image.save(&buffer, "PNG");
+                                        this->content = ba;
+                                        setHeader(
+                                            QNetworkRequest::ContentTypeHeader,
+                                            QVariant("image/png"));
+                                        setHeader(
+                                            QNetworkRequest::
+                                            ContentLengthHeader,
+                                            QVariant(this->content.size()));
+                                        setError(QNetworkReply::NoError,
+                                            "No Error");
+                                    }
+                                    else
+                                    {
+                                        setError(ContentNotFoundError,
+                                            "Not found");
+                                    }
+                                }
+                                else
+                                {
+                                    setError(ContentNotFoundError, "Not found");
+                                }
+                            }
                         }
                     }
                 }

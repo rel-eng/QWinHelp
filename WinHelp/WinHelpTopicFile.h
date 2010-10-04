@@ -34,6 +34,7 @@
 #include "WinHelpPhraseFile.h"
 #include "WinHelpPhrImageFile.h"
 #include "TopicRawDescriptor.h"
+#include "WinHelpPicture.h"
 
 #include <cstddef>
 
@@ -46,6 +47,7 @@ private:
     QList<QSharedPointer<TopicLink> > linkPointers;
     QMultiHash<qint64, int> linkBlocks;
     QList<QSharedPointer<TopicRawDescriptor> > rawDescriptors;
+    QList<WinHelpPicture> embeddedImages;
 
     size_t CopyTopicBytes(QFile &file,
         qint64 topicBlockSize,
@@ -178,6 +180,7 @@ public:
     QString getTopicCaption(int index) const;
     QString getTopicContents(int index) const;
     int getTopicIndexByTopicOffset(int block, int character) const;
+    const QList<WinHelpPicture> &getEmbeddedPicturesList() const;
 };
 
 #endif /* WINHELPTOPICFILE_H_ */

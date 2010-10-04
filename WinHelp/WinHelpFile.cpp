@@ -141,6 +141,7 @@ WinHelpFile::WinHelpFile(QString filename) : file(filename)
             }
         }
     }
+    this->picturesCollection = WinHelpPicturesCollection(file, directory);
 }
 
 WinHelpFile::~WinHelpFile()
@@ -167,4 +168,18 @@ const WinHelpFontFile & WinHelpFile::getFontFile() const
 const WinHelpContextFile & WinHelpFile::getContextFile() const
 {
     return this->contextFile;
+}
+
+const WinHelpPicturesCollection & WinHelpFile::getPicturesCollection() const
+{
+    return this->picturesCollection;
+}
+
+WinHelpPicture WinHelpFile::getEmbeddedPicture(int index) const
+{
+    if ((index < 0) || (index >= this->topicFile.getEmbeddedPicturesList().size()))
+    {
+        return WinHelpPicture();
+    }
+    return this->topicFile.getEmbeddedPicturesList().at(index);
 }
