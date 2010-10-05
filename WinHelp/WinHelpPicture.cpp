@@ -216,11 +216,11 @@ WinHelpPicture::WinHelpPicture(QIODevice &device, qint64 off) : pictures()
             MetafileHeader metafileHdr(device,
                     pictOffset + PictureInfoHeader::size);
             qDebug() << "Metafiles are not supported";
-            if((metafileHdr.getWidth() * metafileHdr.getHeight()) <= 1920000)
+            if(((metafileHdr.getWidth()/20) * (metafileHdr.getHeight()/20)) <= 1920000)
             {
                 QImage unsupportedImage(
-                        metafileHdr.getWidth(),
-                        metafileHdr.getHeight(), QImage::Format_ARGB32);
+                        metafileHdr.getWidth()/20,
+                        metafileHdr.getHeight()/20, QImage::Format_ARGB32);
                 QPainter painter;
                 painter.begin(&unsupportedImage);
                 painter.fillRect(0, 0,
