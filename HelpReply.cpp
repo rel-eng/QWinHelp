@@ -23,6 +23,7 @@
 #include <QImage>
 #include <QBuffer>
 #include <QByteArray>
+#include <QUrlQuery>
 
 HelpReply::HelpReply(ThreadedWinHelpFileLoader &winHelpFileLoader,
     const QUrl &url,
@@ -35,10 +36,11 @@ HelpReply::HelpReply(ThreadedWinHelpFileLoader &winHelpFileLoader,
     {
         if(url.hasQuery())
         {
-            if(url.hasQueryItem(QString("topic")))
+            QUrlQuery urlQuery(url);
+            if(urlQuery.hasQueryItem(QString("topic")))
             {
                 bool topicIndexValid = true;
-                int topicIndex = url.queryItemValue(QString("topic")).toInt(
+                int topicIndex = urlQuery.queryItemValue(QString("topic")).toInt(
                     &topicIndexValid,
                     10);
                 if(topicIndexValid)
@@ -66,16 +68,16 @@ HelpReply::HelpReply(ThreadedWinHelpFileLoader &winHelpFileLoader,
             }
             else
             {
-                if(url.hasQueryItem(QString("block")) &&
-                    url.hasQueryItem(QString("character")))
+                if(urlQuery.hasQueryItem(QString("block")) &&
+                    urlQuery.hasQueryItem(QString("character")))
                 {
                     bool topicBlockValid = true;
-                    int block = url.queryItemValue(QString("block")).toInt(
+                    int block = urlQuery.queryItemValue(QString("block")).toInt(
                         &topicBlockValid,
                         10);
                     bool topicCharacterValid = true;
                     int character =
-                        url.queryItemValue(QString("character")).toInt(
+                        urlQuery.queryItemValue(QString("character")).toInt(
                         &topicCharacterValid,
                         10);
                     if(topicBlockValid && topicCharacterValid)
@@ -106,11 +108,11 @@ HelpReply::HelpReply(ThreadedWinHelpFileLoader &winHelpFileLoader,
                 }
                 else
                 {
-                    if(url.hasQueryItem(QString("style")))
+                    if(urlQuery.hasQueryItem(QString("style")))
                     {
                         bool styleNumValid = true;
                         int styleNum =
-                            url.queryItemValue(QString("style")).toInt(
+                            urlQuery.queryItemValue(QString("style")).toInt(
                             &styleNumValid,
                             10);
                         if(styleNumValid)
@@ -147,11 +149,11 @@ HelpReply::HelpReply(ThreadedWinHelpFileLoader &winHelpFileLoader,
                     }
                     else
                     {
-                        if(url.hasQueryItem(QString("hash")))
+                        if(urlQuery.hasQueryItem(QString("hash")))
                         {
                             bool hashNumValid = true;
                             uint hashNum =
-                                url.queryItemValue(QString("hash")).toUInt(
+                                urlQuery.queryItemValue(QString("hash")).toUInt(
                                 &hashNumValid,
                                 10);
                             if(hashNumValid)
@@ -191,11 +193,11 @@ HelpReply::HelpReply(ThreadedWinHelpFileLoader &winHelpFileLoader,
                         }
                         else
                         {
-                            if(url.hasQueryItem(QString("image")))
+                            if(urlQuery.hasQueryItem(QString("image")))
                             {
                                 bool imageNumValid = true;
                                 uint imageNum =
-                                    url.queryItemValue(QString("image")).toUInt(
+                                    urlQuery.queryItemValue(QString("image")).toUInt(
                                     &imageNumValid,
                                     10);
                                 if(imageNumValid)
@@ -222,11 +224,11 @@ HelpReply::HelpReply(ThreadedWinHelpFileLoader &winHelpFileLoader,
                             }
                             else
                             {
-                                if(url.hasQueryItem(QString("embeddedimage")))
+                                if(urlQuery.hasQueryItem(QString("embeddedimage")))
                                 {
                                     bool imageNumValid = true;
                                     uint imageNum =
-                                        url.queryItemValue(QString(
+                                        urlQuery.queryItemValue(QString(
                                             "embeddedimage")).toUInt(
                                         &imageNumValid,
                                         10);

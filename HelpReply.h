@@ -23,7 +23,7 @@
 #include <QObject>
 #include <QNetworkReply>
 #include <QStringList>
-#include <QUrlInfo>
+#include <QUrl>
 #include <QByteArray>
 
 #include "ThreadedWinHelpFileLoader.h"

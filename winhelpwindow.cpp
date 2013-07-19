@@ -21,6 +21,7 @@
 
 #include <QMessageBox>
 #include <QFileInfo>
+#include <QUrlQuery>
 
 #include <QtDebug>
 
@@ -132,11 +133,12 @@ void WinHelpWindow::tabURLChanged(QWidget *widget)
             QUrl newUrl = helpBrowser->getURL();
             if(newUrl.hasQuery())
             {
-                if(newUrl.hasQueryItem(QString("topic")))
+                QUrlQuery newUrlQuery(newUrl);
+                if(newUrlQuery.hasQueryItem(QString("topic")))
                 {
                     bool isInt = false;
                     int topicIndex =
-                        newUrl.queryItemValue(QString("topic")).toInt(&isInt,
+                        newUrlQuery.queryItemValue(QString("topic")).toInt(&isInt,
                         10);
                     if(isInt)
                     {
@@ -147,17 +149,17 @@ void WinHelpWindow::tabURLChanged(QWidget *widget)
                 }
                 else
                 {
-                    if(newUrl.hasQueryItem(QString("block")) &&
-                        newUrl.hasQueryItem(QString("character")))
+                    if(newUrlQuery.hasQueryItem(QString("block")) &&
+                        newUrlQuery.hasQueryItem(QString("character")))
                     {
                         bool topicBlockValid = true;
                         int block =
-                            newUrl.queryItemValue(QString("block")).toInt(
+                            newUrlQuery.queryItemValue(QString("block")).toInt(
                             &topicBlockValid,
                             10);
                         bool topicCharacterValid = true;
                         int character =
-                            newUrl.queryItemValue(QString("character")).toInt(
+                            newUrlQuery.queryItemValue(QString("character")).toInt(
                             &topicCharacterValid,
                             10);
                         if(topicBlockValid && topicCharacterValid)
@@ -172,11 +174,11 @@ void WinHelpWindow::tabURLChanged(QWidget *widget)
                     }
                     else
                     {
-                        if(newUrl.hasQueryItem(QString("hash")))
+                        if(newUrlQuery.hasQueryItem(QString("hash")))
                         {
                             bool hashNumValid = true;
                             uint hashNum =
-                                newUrl.queryItemValue(QString("hash")).toUInt(
+                                newUrlQuery.queryItemValue(QString("hash")).toUInt(
                                 &hashNumValid,
                                 10);
                             if(hashNumValid)

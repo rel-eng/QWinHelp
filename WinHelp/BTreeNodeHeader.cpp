@@ -53,7 +53,7 @@ BTreeNodeHeader::BTreeNodeHeader(QFile &file, qint64 off)
 
 BTreeNodeHeader::BTreeNodeHeader(const BTreeNodeHeader& rhs) :
     unused(rhs.unused), nEntries(rhs.nEntries), previousPage(rhs.previousPage),
-    nextPage(nextPage)
+    nextPage(rhs.nextPage)
 {
     PRINT_DBG("BTree node header copy constructor");
 }

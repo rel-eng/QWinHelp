@@ -22,7 +22,7 @@ TARGET = QWinHelp
 QT += core \
     gui \
     network \
-    webkit
+    webkitwidgets
 HEADERS += HelpReply.h \
     HelpAccessManager.h \
     HelpView.h \
@@ -196,9 +196,9 @@ FORMS += winhelpwindow.ui \
     qwinhelp.ui
 RESOURCES +=
 debug {
-    DEFINES += DEBUG
+#    DEFINES += DEBUG
 }
-QMAKE_CXXFLAGS_DEBUG += -std=c++0x
-QMAKE_CXXFLAGS_RELEASE += -std=c++0x
-QMAKE_CFLAGS_DEBUG += -std=c++0x
-QMAKE_CFLAGS_RELEASE += -std=c++0x
+QMAKE_CXXFLAGS_DEBUG += -std=c++0x -Wall
+QMAKE_CXXFLAGS_RELEASE += -std=c++0x -Wall
+QMAKE_CFLAGS_DEBUG += -std=c++0x -Wall
+QMAKE_CFLAGS_RELEASE += -std=c++0x -Wall

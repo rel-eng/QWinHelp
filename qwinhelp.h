@@ -20,10 +20,10 @@
 #ifndef QWINHELP_H
 #define QWINHELP_H
 
-#include <QtGui/QMainWindow>
-#include <QtGui/QMdiArea>
-#include <QtGui/QMdiSubWindow>
-#include <QtGui/QAction>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMdiArea>
+#include <QtWidgets/QMdiSubWindow>
+#include <QtWidgets/QAction>
 #include <QSignalMapper>
 #include <QString>
 #include "ui_qwinhelp.h"

@@ -20,7 +20,7 @@
 #ifndef WINHELPWINDOW_H
 #define WINHELPWINDOW_H
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <QScopedPointer>
 #include <QCloseEvent>
 #include <QStringList>
