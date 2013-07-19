@@ -304,7 +304,7 @@ void HelpReply::abort()
 
 qint64 HelpReply::bytesAvailable() const
 {
-    return content.size() - offset;
+    return content.size();
 }
 
 bool HelpReply::isSequential() const
