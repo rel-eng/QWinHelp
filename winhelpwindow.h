@@ -27,6 +27,7 @@
 #include <QStringListModel>
 #include <QSortFilterProxyModel>
 #include <QSignalMapper>
+#include <QWebEngineProfile>
 #include "ui_winhelpwindow.h"
 
 #include "WinHelp/WinHelpFile.h"
@@ -66,6 +67,7 @@ private:
     HelpIndexModel topics;
     QSortFilterProxyModel topicsProxy;
     QSignalMapper *tabMapper;
+    QWebEngineProfile* profile;
 
     void setCurrentFile(const QString &fileName);
     QString strippedName(const QString &fullFileName);

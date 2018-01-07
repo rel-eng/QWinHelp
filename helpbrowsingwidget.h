@@ -33,8 +33,7 @@ class HelpBrowsingWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit HelpBrowsingWidget(ThreadedWinHelpFileLoader &winHelpFileLoader,
-        QWidget *parent = 0);
+    explicit HelpBrowsingWidget(QWebEngineProfile* profile, QWidget *parent = 0);
     void goToURL(const QUrl &url);
     QUrl getURL() const;
 

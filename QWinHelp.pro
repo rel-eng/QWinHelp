@@ -22,9 +22,8 @@ TARGET = QWinHelp
 QT += core \
     gui \
     network \
-    webkitwidgets
-HEADERS += HelpReply.h \
-    HelpAccessManager.h \
+    webenginewidgets
+HEADERS += \
     HelpView.h \
     HelpIndexModel.h \
     WinHelp/TopicLink.h \
@@ -107,9 +106,10 @@ HEADERS += HelpReply.h \
     WinHelp/MetafileHeader.h \
     WinHelp/WinHelpPicture.h \
     WinHelp/WinHelpPictureFile.h \
-    WinHelp/WinHelpPicturesCollection.h
-SOURCES += HelpReply.cpp \
-    HelpAccessManager.cpp \
+    WinHelp/WinHelpPicturesCollection.h \
+    HelpUrlSchemeHandler.h \
+    HelpReplyIoDevice.h
+SOURCES += \
     HelpView.cpp \
     HelpIndexModel.cpp \
     WinHelp/TopicLink.cpp \
@@ -191,14 +191,16 @@ SOURCES += HelpReply.cpp \
     WinHelp/MetafileHeader.cpp \
     WinHelp/WinHelpPicture.cpp \
     WinHelp/WinHelpPictureFile.cpp \
-    WinHelp/WinHelpPicturesCollection.cpp
+    WinHelp/WinHelpPicturesCollection.cpp \
+    HelpUrlSchemeHandler.cpp \
+    HelpReplyIoDevice.cpp
 FORMS += winhelpwindow.ui \
     qwinhelp.ui
 RESOURCES +=
 debug {
 #    DEFINES += DEBUG
 }
-QMAKE_CXXFLAGS_DEBUG += -std=c++0x -Wall
-QMAKE_CXXFLAGS_RELEASE += -std=c++0x -Wall
-QMAKE_CFLAGS_DEBUG += -std=c++0x -Wall
-QMAKE_CFLAGS_RELEASE += -std=c++0x -Wall
+QMAKE_CXXFLAGS_DEBUG += -std=c++14 -Wall
+QMAKE_CXXFLAGS_RELEASE += -std=c++14 -Wall
+QMAKE_CFLAGS_DEBUG += -std=c++14 -Wall
+QMAKE_CFLAGS_RELEASE += -std=c++14 -Wall

@@ -1,6 +1,6 @@
-/* Help reply class definition.
+/* Help reply IO device class definition.
 
-   Copyright (C) 2010 rel-eng
+   Copyright (C) 2018 rel-eng
 
    This file is part of QWinHelp.
 
@@ -17,35 +17,27 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-#ifndef HELPREPLY_H_
-#define HELPREPLY_H_
+#ifndef HELPREPLYIODEVICE_H_
+#define HELPREPLYIODEVICE_H_
 
 #include <QObject>
-#include <QNetworkReply>
-#include <QStringList>
+#include <QIODevice>
 #include <QUrl>
 #include <QByteArray>
 
-#include "ThreadedWinHelpFileLoader.h"
-
-class HelpReply : public QNetworkReply
-{
+class HelpReplyIoDevice : public QIODevice {
     Q_OBJECT
 public:
-    HelpReply(ThreadedWinHelpFileLoader &winHelpFileLoader,
-        const QUrl &url,
-        bool giveError);
-    void abort();
-    qint64 bytesAvailable() const;
-    bool isSequential() const;
-    virtual ~HelpReply();
+    HelpReplyIoDevice(const QByteArray &data);
+    virtual ~HelpReplyIoDevice();
+    virtual qint64 bytesAvailable() const Q_DECL_OVERRIDE;
+    virtual void close() Q_DECL_OVERRIDE;
 protected:
-    qint64 readData(char *data, qint64 maxSize);
-private slots:
-    void signalCompleted();
+    virtual qint64 readData(char *data, qint64 maxlen) Q_DECL_OVERRIDE;
+    virtual qint64 writeData(const char *data, qint64 maxlen) Q_DECL_OVERRIDE;
 private:
-    QByteArray content;
-    qint64 offset;
+    QByteArray data;
+    const qint64 dataLength;
 };
 
-#endif /* HELPREPLY_H_ */
+#endif /* HELPREPLYIODEVICE_H_ */

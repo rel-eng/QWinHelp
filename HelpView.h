@@ -21,17 +21,16 @@
 #define HELPVIEW_H_
 
 #include <QObject>
-#include <QWebView>
+#include <QWebEngineView>
 #include <QWidget>
 
-#include "HelpAccessManager.h"
 #include "ThreadedWinHelpFileLoader.h"
 
-class HelpView : public QWebView
+class HelpView : public QWebEngineView
 {
     Q_OBJECT
 public:
-    HelpView(ThreadedWinHelpFileLoader &winHelpFileLoader, QWidget *parent = 0);
+    HelpView(QWebEngineProfile* profile, QWidget *parent = 0);
     virtual ~HelpView();
 };
 

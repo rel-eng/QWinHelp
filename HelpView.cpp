@@ -17,14 +17,21 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
+#include <QWebEngineProfile>
+#include <QWebEnginePage>
+#include <QWebEngineSettings>
+#include <QByteArray>
+
 #include "HelpView.h"
 
-HelpView::HelpView(ThreadedWinHelpFileLoader &winHelpFileLoader,
-    QWidget *parent) : QWebView(parent)
+#include "HelpUrlSchemeHandler.h"
+
+HelpView::HelpView(QWebEngineProfile* profile,
+    QWidget *parent) : QWebEngineView(parent)
 {
-    HelpAccessManager *newManager = new HelpAccessManager(winHelpFileLoader,
-        this);
-    page()->setNetworkAccessManager(newManager);
+    QWebEnginePage *page = new QWebEnginePage(profile, this);
+    page->settings()->setDefaultTextEncoding(QString("utf-8"));
+    setPage(page);
 }
 
 HelpView::~HelpView()

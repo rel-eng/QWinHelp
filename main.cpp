@@ -24,15 +24,12 @@
 #include <QtDebug>
 #include <QtGlobal>
 #include <QDateTime>
-#include <QWebSettings>
 
 #include "WinHelpApplication.h"
 
 int main(int argc, char *argv[])
 {
     WinHelpApplication a(argc, argv);
-    QWebSettings::setMaximumPagesInCache(0);
-    QWebSettings::setObjectCacheCapacities(0, 0, 0);
     QWinHelp w;
     w.show();
     return a.exec();

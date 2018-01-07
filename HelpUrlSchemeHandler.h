@@ -1,6 +1,6 @@
-/* Help access manager class definition.
+/* Help URL scheme handler class definition.
 
-   Copyright (C) 2010 rel-eng
+   Copyright (C) 2018 rel-eng
 
    This file is part of QWinHelp.
 
@@ -17,30 +17,24 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-#ifndef HELPACCESSMANAGER_H_
-#define HELPACCESSMANAGER_H_
+#ifndef HELPURLSCHEMEHANDLER_H_
+#define HELPURLSCHEMEHANDLER_H_
 
 #include <QObject>
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QIODevice>
+#include <QWebEngineUrlRequestJob>
+#include <QWebEngineUrlSchemeHandler>
 
 #include "ThreadedWinHelpFileLoader.h"
 
-class HelpAccessManager : public QNetworkAccessManager
-{
+class HelpUrlSchemeHandler : public QWebEngineUrlSchemeHandler {
     Q_OBJECT
 public:
-    HelpAccessManager(ThreadedWinHelpFileLoader &winHelpFileLoader,
-        QObject *parent = 0);
-    virtual ~HelpAccessManager();
-protected:
-    QNetworkReply *createRequest(Operation operation,
-        const QNetworkRequest &request,
-        QIODevice *device);
+    HelpUrlSchemeHandler(ThreadedWinHelpFileLoader &winHelpFileLoader, QObject *parent = 0);
+    virtual ~HelpUrlSchemeHandler();
+
+    void requestStarted(QWebEngineUrlRequestJob *job) Q_DECL_OVERRIDE;
 private:
     ThreadedWinHelpFileLoader &winHelpFileLoader;
 };
 
-#endif /* HELPACCESSMANAGER_H_ */
+#endif /* HELPURLSCHEMEHANDLER_H_ */

@@ -19,10 +19,9 @@
 
 #include "helpbrowsingwidget.h"
 
-#include <QWebHistory>
+#include <QWebEngineHistory>
 
-HelpBrowsingWidget::HelpBrowsingWidget(
-    ThreadedWinHelpFileLoader &winHelpFileLoader,
+HelpBrowsingWidget::HelpBrowsingWidget(QWebEngineProfile* profile,
     QWidget *parent) :
     QWidget(parent)
 {
@@ -37,7 +36,7 @@ HelpBrowsingWidget::HelpBrowsingWidget(
     this->horizontalLayout->addWidget(this->prevButton);
     this->horizontalLayout->addWidget(this->nextButton);
     this->verticalLayout->addLayout(this->horizontalLayout);
-    this->browser = new HelpView(winHelpFileLoader);
+    this->browser = new HelpView(profile);
     this->verticalLayout->addWidget(this->browser);
     this->setLayout(this->verticalLayout);
     connect(this->browser, SIGNAL(urlChanged(const QUrl &)), this,

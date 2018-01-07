@@ -28,6 +28,7 @@
 #include <stdexcept>
 
 #include "helpbrowsingwidget.h"
+#include "HelpUrlSchemeHandler.h"
 
 WinHelpWindow::WinHelpWindow(QWidget *parent) :
     QWidget(parent)
@@ -61,6 +62,9 @@ WinHelpWindow::WinHelpWindow(QWidget *parent) :
     tabMapper = new QSignalMapper(this);
     connect(tabMapper, SIGNAL(mapped(QWidget*)), this,
         SLOT(tabURLChanged(QWidget*)));
+    this->profile = new QWebEngineProfile(this);
+    this->profile->installUrlSchemeHandler(QByteArray("help"), new HelpUrlSchemeHandler(this->winHelpFileLoader, this));
+    this->profile->setHttpCacheType(QWebEngineProfile::NoCache);
 }
 
 WinHelpWindow::~WinHelpWindow()
@@ -106,7 +110,7 @@ void WinHelpWindow::indexSearchListDoubleClicked(const QModelIndex & index)
         this->topicsProxy.data(this->topicsProxy.index(
             index.row(), 0), Qt::DisplayRole).toInt();
     HelpBrowsingWidget *newView = new HelpBrowsingWidget(
-        this->winHelpFileLoader);
+        this->profile);
     QUrl topicUrl(QString("help://help.local/pages?topic=%1").arg(topicIndex));
     newView->goToURL(topicUrl);
     this->ui.pagesTabs->addTab(newView,

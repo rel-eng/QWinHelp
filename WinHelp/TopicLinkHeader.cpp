@@ -75,7 +75,7 @@ TopicLinkHeader::TopicLinkHeader(const void *src,
 
 TopicLinkHeader::TopicLinkHeader(const TopicLinkHeader& rhs) : blockSize(rhs.
     blockSize), dataLen2(rhs.dataLen2), prevBlock(rhs.prevBlock),
-    nextBlock(rhs.prevBlock), dataLen1(rhs.dataLen1), recordType(rhs.recordType)
+    nextBlock(rhs.nextBlock), dataLen1(rhs.dataLen1), recordType(rhs.recordType)
 {
     PRINT_DBG("Topic link header copy constructor");
 }
